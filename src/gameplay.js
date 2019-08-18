@@ -60,8 +60,11 @@ const Gameplay = {
       scale = newWidth / width;
     }
 
-    const offsetX = (this.app.width / 2) - (width / 2) - paddingX - (20 + Time.containerWidth);
-    const offsetY = (this.app.height / 2) - (height / 2) - paddingY + (Score.size * 2);
+    let offsetX =  (width / 2) - paddingX;
+    offsetX = (this.app.width / 2) - (scale * offsetX);
+    let offsetY =  (height / 2) - paddingY;
+    offsetY = (this.app.height / 2) - (scale * offsetY);
+
     ctx.translate(offsetX, offsetY);
     ctx.scale(scale, scale);
   },
@@ -71,11 +74,11 @@ const Gameplay = {
     ctx.fillStyle = 'black';
     ctx.fillRect(0, 0, this.app.width, this.app.height);
 
-    ctx.save();
-    ctx.translate(0.5, 0.5);
 
     ctx.save();
     this.transformToFitCanvas(ctx);
+    ctx.save();
+    ctx.translate(0.5, 0.5);
 
     Bubble.draw(ctx);
     Trail.draw(ctx);

@@ -1,7 +1,8 @@
+// TODO figure out color triads
 export default {
   field: {
-    width: 800,
-    height: 600,
+    width: 640,
+    height: 480,
     color: 'red',
     flashColor: 'white'
   },
@@ -48,7 +49,7 @@ export default {
   },
 
   burst: {
-    fadeTime: 0.75,
+    fadeTime: 1.5,
     color: 'red',
     amount: 5,
     minSpeed: 20,

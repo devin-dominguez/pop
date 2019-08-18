@@ -15,9 +15,11 @@ export default class Trail {
   }
 
   static update(dt) {
-    Trail.fadeTime = 1 / lerp(Time.normalized ** 3, Trail.minFadeTime, Trail.maxFadeTime);
+    Trail.fadeTime = 1 / lerp(Time.normalized * Time.normalized, Trail.minFadeTime, Trail.maxFadeTime);
 
-    Trail.segments.push(new Trail());
+    if (!Time.isBonusTime) {
+      Trail.segments.push(new Trail());
+    }
 
     Trail.segments.forEach(segment => segment.update(dt));
     Trail.segments = Trail.segments.filter(segment => !segment.dead);
@@ -27,8 +29,8 @@ export default class Trail {
     ctx.save();
 
     ctx.strokeStyle = Trail.color;
-    ctx.beginPath();
     ctx.moveTo(Player.x, Player.y);
+    ctx.beginPath();
 
     Trail.segments.forEach((segment, idx) => {
       ctx.globalAlpha = segment.fade;

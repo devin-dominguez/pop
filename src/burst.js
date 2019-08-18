@@ -31,6 +31,8 @@ export default class Burst {
   constructor() {
     this.x = Player.x;
     this.y = Player.y;
+    this.vX = 0;
+    this.vY = 0;
     this.angle = Math.atan2(Player.vY, Player.vX);
     const offset = Math.random() * Math.PI * 2;
     this.angle += offset;
@@ -43,10 +45,10 @@ export default class Burst {
 
   update(dt) {
     const v = this.speed * (this.fade ** 0.25);
-    const vX = Math.cos(this.angle) * v;
-    const vY = Math.sin(this.angle) * v;
-    this.x += vX * dt;
-    this.y += vY * dt;
+    this.vX = Math.cos(this.angle);
+    this.vY = Math.sin(this.angle);
+    this.x += this.vX * v * dt;
+    this.y += this.vY * v * dt;
 
     if (this.fade > 0) {
       this.fade -= dt / Burst.fadeTime;
@@ -60,11 +62,13 @@ export default class Burst {
   draw(ctx) {
     ctx.save();
     ctx.translate(this.x, this.y);
-    ctx.fillStyle = Burst.color;
-    ctx.globalAlpha = this.fade;
     ctx.beginPath();
-    ctx.arc(0, 0, Burst.size * this.fade, 0, Math.PI * 2);
-    ctx.fill();
+    ctx.moveTo(0, 0);
+    ctx.lineTo(this.vX * Burst.size, this.vY * Burst.size);
+    ctx.strokeStyle = Burst.color;
+    ctx.globalAlpha = this.fade;
+    ctx.fillStyle = Burst.color;
+    ctx.stroke();
 
     ctx.restore();
   }

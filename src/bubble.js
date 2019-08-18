@@ -3,7 +3,7 @@ import Field from './field';
 import Player from './player';
 import Bullet from './bullet';
 import Time from './time';
-import { drawCharacter } from './text';
+//import { drawCharacter } from './text';
 import { checkCircularCollision } from './utils';
 import {
   BulletCollision,
@@ -35,7 +35,7 @@ export default class Bubble {
 
   static draw(ctx) {
     Bubble.bubbles.forEach(bubble => bubble.draw(ctx));
-    Bubble.bubbles.forEach(bubble => bubble.drawSignal(ctx));
+    //Bubble.bubbles.forEach(bubble => bubble.drawSignal(ctx));
   }
 
   static makeWave() {
@@ -105,6 +105,7 @@ export default class Bubble {
     this.active = false;
     this.signalSize = this.size * Bubble.signalMultiplier;
     this.progress = 1;
+    this.flash = false;
   }
 
   update(dt) {
@@ -113,13 +114,15 @@ export default class Bubble {
       Player.targetCollisionCircle
     );
 
-    if (isColliding) {
+    if (isColliding && !this.active) {
       this.active = true;
+      this.flash = true;
     }
 
     if (this.active) {
       this.signalSize -= Bubble.countdownSpeed * dt;
-      this.progress = this.signalSize / (this.size * Bubble.signalMultiplier);
+      const originalSignal = this.size * Bubble.signalMultiplier;
+      this.progress = (this.signalSize - this.size) / (originalSignal - this.size)
     }
 
     if (this.signalSize <= this.size) {
@@ -143,26 +146,50 @@ export default class Bubble {
     ctx.globalAlpha = 1;
     ctx.stroke();
 
-    const levelString = this.level <= 15 ? this.level.toString(16) : '+';
-    ctx.globalAlpha = this.progress * this.progress;
-    ctx.strokeStyle = this.active ? Bubble.activeTextColor : Bubble.textColor;
-    drawCharacter(ctx, levelString, 0, 0, this.size / 3, true);
+    ctx.beginPath();
+    ctx.ellipse(0, 0, this.size, this.size * this.progress, 0, 0, Math.PI);
+    ctx.ellipse(0, 0, this.size, this.size * this.progress, 0, Math.PI, 0);
+    ctx.fill();
+    ctx.stroke();
+    ctx.clip();
 
-    ctx.restore();
-  }
-
-  drawSignal(ctx) {
-    if (this.active) {
+    const angle = Math.atan2(Player.y - this.y, Player.x - this.x);
+    const offsetX = (this.size / 6) * Math.cos(angle);
+    const offsetY = (this.size / 6) * Math.sin(angle);
     ctx.save();
-    ctx.translate(this.x, this.y);
-      ctx.globalAlpha = 1 - (this.progress * this.progress);
-      ctx.strokeStyle = Bubble.signalColor;
-      ctx.beginPath();
-      ctx.arc(0, 0, this.signalSize, 0, Math.PI * 2);
-      ctx.stroke();
-    ctx.restore();
+    ctx.translate(offsetX, offsetY);
+    ctx.beginPath();
+    ctx.arc(0, 0, this.size / 2, 0, Math.PI * 2);
+    ctx.strokeStyle = Bubble.activeTextColor;
+    if (this.flash) {
+      ctx.fillStyle = Bubble.activeTextColor;
+      this.flash = false;
     }
+    ctx.fill();
+    ctx.stroke();
+
+    //const levelString = this.level <= 15 ? this.level.toString(16) : '+';
+    //ctx.globalAlpha = this.progress * this.progress;
+    //ctx.strokeStyle = this.active ? Bubble.activeTextColor : Bubble.textColor;
+    //ctx.strokeStyle = Bubble.textColor;
+    //drawCharacter(ctx, levelString, 0, 0, this.size / 2, true);
+
+    ctx.restore();
+    ctx.restore();
   }
+
+  //drawSignal(ctx) {
+    //if (this.active) {
+    //ctx.save();
+    //ctx.translate(this.x, this.y);
+      //ctx.globalAlpha = 1 - (this.progress * this.progress);
+      //ctx.strokeStyle = Bubble.signalColor;
+      //ctx.beginPath();
+      //ctx.arc(0, 0, this.signalSize, 0, Math.PI * 2);
+      //ctx.stroke();
+    //ctx.restore();
+    //}
+  //}
 
   pop() {
     this.dead = true;
