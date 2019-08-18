@@ -41,7 +41,7 @@ export default class App {
 
   transitionToScene(scene) {
     if (this.currentScene && this.currentScene.exit) {
-      this.currentScene.exits(scene);
+      this.currentScene.exit(scene);
     }
     this.currentScene = scene;
     if (this.currentScene.init) {
