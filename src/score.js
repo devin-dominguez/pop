@@ -2,17 +2,24 @@ import Config from './config';
 import Time from './time';
 import { drawString } from './letters';
 import { constrain } from './utils';
+import {
+  BulletEscape,
+  BubblePop,
+  WaveClear,
+  GameOver
+} from './events';
 
 export default class Score {
   static init() {
     Object.assign(Score, Config.score);
+    Score.reset();
+    Score.highScore = 0;
+  }
 
+  static reset() {
     Score.currentScore = 0;
     Score.multiplier = 1;
     Score.bonusTime = false;
-    if (!Score.highScore) {
-      Score.highScore = 0;
-    }
   }
 
   static update(dt) {
@@ -51,6 +58,10 @@ export default class Score {
     Score.currentScore += Score.bubbleScoreMultiplier * level * Score.multiplier;
   }
 
+  static onWaveClear(wave) {
+    Score.currentScore += Score.waveClearBonusMultiplier * wave * Score.multiplier;
+  }
+
   static onGameOver() {
     Score.highScore = Math.max(Score.score, Score.highScore);
   }
@@ -67,3 +78,8 @@ export default class Score {
     return `SCORE ${Score.score.toString()}`;
   }
 }
+
+BulletEscape.subscribe(Score.onBulletEscape);
+BubblePop.subscribe(Score.onBubblePop);
+WaveClear.subscribe(Score.onWaveClear);
+GameOver.subscribe(Score.onGameOver);

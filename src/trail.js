@@ -6,6 +6,10 @@ import { lerp } from './utils';
 export default class Trail {
   static init() {
     Object.assign(Trail, Config.trail);
+    Trail.reset();
+  }
+
+  static reset() {
     Trail.segments = [];
     Trail.fadeTime = 1 / Trail.minFadeTime;
   }

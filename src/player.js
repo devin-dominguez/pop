@@ -1,12 +1,16 @@
 import Config from './config';
+import Field from './field';
 import { constrain } from './utils';
 
 export default class Player {
   static init() {
     Object.assign(Player, Config.player);
+    Player.reset();
+  }
 
-    Player.x = Config.world.width / 2;
-    Player.y = Config.world.height / 2;
+  static reset() {
+    Player.x = Field.width / 2;
+    Player.y = Field.height / 2;
     Player.vX = 0;
     Player.vY = 0;
   }
@@ -38,8 +42,8 @@ export default class Player {
 
     Player.x += dX * dt * Player.speed;
     Player.y += dY * dt * Player.speed;
-    Player.x = constrain(Player.x, 0, Config.world.width);
-    Player.y = constrain(Player.y, 0, Config.world.height);
+    Player.x = constrain(Player.x, 0, Field.width);
+    Player.y = constrain(Player.y, 0, Field.height);
   }
 
   static draw(ctx) {
@@ -73,6 +77,10 @@ export default class Player {
       y: Player.y,
       size: Player.hitboxSize
     };
+  }
+
+  static get isMoving() {
+    return Player.vX || Player.vY;
   }
 }
 

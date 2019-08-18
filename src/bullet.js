@@ -1,13 +1,20 @@
 import Config from './config';
-import Bubble from './bubble';
 import Time from './time';
 import Score from './score';
 import Player from './player';
+import Field from './field';
 import { checkCircularCollision } from './utils';
+import {
+  BulletCollision
+} from './events';
 
 export default class Bullet {
   static init() {
     Object.assign(Bullet, Config.bullet);
+    Bullet.reset();
+  }
+
+  static reset() {
     Bullet.bullets = [];
   }
 
@@ -71,8 +78,7 @@ export default class Bullet {
       );
       if (collision) {
         Bullet.killAll();
-        Bubble.killAllActiveBubbles();
-        Time.onBulletCollision();
+        BulletCollision.trigger();
       }
     }
 
@@ -106,9 +112,8 @@ export default class Bullet {
   }
 
   get isOutOfBounds() {
-    const { width, height } = Config.world;
-    return (this.x > width) ||
-      (this.y > height) ||
+    return (this.x > Field.width) ||
+      (this.y > Field.height) ||
       (this.x < 0) ||
       (this.y < 0);
   }

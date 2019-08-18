@@ -1,14 +1,23 @@
 import Config from './config';
+import Field from './field';
 import Player from './player';
 import Bullet from './bullet';
 import Time from './time';
-import Score from './score';
 import { drawCharacter } from './letters';
 import { checkCircularCollision } from './utils';
+import {
+  BulletCollision,
+  BubblePop,
+  WaveClear
+} from './events';
 
 export default class Bubble {
   static init() {
     Object.assign(Bubble, Config.bubble);
+    Bubble.reset();
+  }
+
+  static reset() {
     Bubble.bubbles = [];
     Bubble.currentWave = 1;
   }
@@ -17,7 +26,7 @@ export default class Bubble {
     if (Bubble.bubbles.length === 0) {
       Bubble.currentWave++;
       Bubble.makeWave();
-      Time.onWaveClear();
+      WaveClear.trigger(Bubble.currentWave);
     }
 
     Bubble.bubbles.forEach(bubble => bubble.update(dt));
@@ -41,13 +50,12 @@ export default class Bubble {
 
     const placedBubbles = [];
     Bubble.bubbles.sort((a, b) => a.size > b.size ? -1 : 1).forEach(bubble => {
-      const { width, height } = Config.world;
       const { size } = bubble;
 
       const minX = size;
       const minY = size;
-      const maxX = width - size;
-      const maxY = height - size;
+      const maxX = Field.width - size;
+      const maxY = Field.height - size;
 
       let placed = false;
       let attemptsRemaining = Bubble.placementAttempts;
@@ -159,11 +167,12 @@ export default class Bubble {
   pop() {
     this.dead = true;
     Bullet.makeBulletsFromBubble(this);
-    Time.onBubblePop(this.level);
-    Score.onBubblePop(this.level);
+    BubblePop.trigger(this.level);
   }
 
   get collisionCircle() {
     return {x: this.x, y: this.y, size: this.size};
   }
 }
+
+BulletCollision.subscribe(Bubble.killAllActiveBubbles);

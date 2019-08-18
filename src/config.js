@@ -1,7 +1,9 @@
 export default {
-  world: {
+  field: {
     width: 800,
-    height: 600
+    height: 600,
+    color: 'red',
+    flashColor: 'white'
   },
 
   score: {
@@ -9,6 +11,7 @@ export default {
     bulletScore: 100,
     minBonusMultiplier: 2,
     maxBonusMultiplier: 16,
+    waveClearBonusMultiplier: 10000,
     bonusMultiplierIncreaseRate: 0.25,
     color: 'red',
     highScoreColor: 'blue'
@@ -18,8 +21,8 @@ export default {
     max: 30,
     initialTime: 20,
     initialCountdownSpeed: 1,
-    bonusTime: 26,
-    penalty: 10,
+    bonusTime: 25,
+    penalty: 8,
 
     slowFactor: 4,
 
@@ -39,6 +42,15 @@ export default {
     minFadeTime: 0.01,
     maxFadeTime: 3,
     color: 'red'
+  },
+
+  burst: {
+    fadeTime: 0.75,
+    color: 'red',
+    amount: 5,
+    minSpeed: 20,
+    maxSpeed: 50,
+    size: 2,
   },
 
   bullet: {
