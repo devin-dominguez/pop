@@ -3,7 +3,7 @@ import Field from './field';
 import Player from './player';
 import Bullet from './bullet';
 import Time from './time';
-import { drawCharacter } from './letters';
+import { drawCharacter } from './text';
 import { checkCircularCollision } from './utils';
 import {
   BulletCollision,
@@ -19,14 +19,14 @@ export default class Bubble {
 
   static reset() {
     Bubble.bubbles = [];
-    Bubble.currentWave = 1;
+    Bubble.currentWave = 0;
   }
 
   static update(dt) {
     if (Bubble.bubbles.length === 0) {
+      WaveClear.trigger(Bubble.currentWave);
       Bubble.currentWave++;
       Bubble.makeWave();
-      WaveClear.trigger(Bubble.currentWave);
     }
 
     Bubble.bubbles.forEach(bubble => bubble.update(dt));

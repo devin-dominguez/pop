@@ -16,7 +16,7 @@ const CHARACTER_POINTS = {
   o: '02 06 68 82',
   p: '02 06 35 52',
   q: '02 06 68 82 84',
-  r: '02 06 35 25 58',
+  r: '02 06 35 25 48',
   s: '02 03 35 58 68',
   t: '02 17',
   u: '06 68 82',
@@ -73,6 +73,7 @@ export function drawCharacter(ctx, char, x, y, size, center = true) {
     return;
   }
 
+  size *= 0.5;
   char = char.toLowerCase();
   const lineData = CHARACTER_LINE_DATA[char];
   const offset = center ? 0 : size;
@@ -88,6 +89,6 @@ const FONT_SPACING = 2.5;
 export function drawString(ctx, string, x, y, size) {
 
   string.toLowerCase().split('').forEach((char, idx) => {
-    drawCharacter(ctx, char, x + (idx * size * FONT_SPACING), y, size, false);
+    drawCharacter(ctx, char, x + (idx * (size / 2) * FONT_SPACING), y, size, false);
   });
 }

@@ -5,7 +5,8 @@ import {
   BulletCollision,
   BulletEscape,
   BubblePop,
-  WaveClear
+  WaveClear,
+  GameOver
 } from './events';
 
 export default class Time {
@@ -29,6 +30,7 @@ export default class Time {
       Time.remaining = Time.slow ? Math.min(Time.remaining, Time.bonusTime) : Time.remaining;
     } else {
       Time.remaining = 0;
+      GameOver.trigger();
     }
 
     if (Time.remaining > Time.max) {

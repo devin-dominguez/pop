@@ -6,6 +6,10 @@ import { lerp } from './utils';
 export default class Burst {
   static init() {
     Object.assign(Burst, Config.burst);
+    Burst.reset();
+  }
+
+  static reset() {
     Burst.particles = [];
   }
 

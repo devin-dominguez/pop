@@ -1,6 +1,6 @@
 import Config from './config';
 import Time from './time';
-import { drawString } from './letters';
+import { drawString } from './text';
 import { constrain } from './utils';
 import {
   BulletEscape,
@@ -45,7 +45,7 @@ export default class Score {
     ctx.save();
     ctx.strokeStyle = Score.isHighScore ? Score.highScoreColor : Score.color;
 
-    drawString(ctx, Score.scoreString, 0, 0, 10);
+    drawString(ctx, Score.scoreString, 0, 0, Score.size);
 
     ctx.restore();
   }

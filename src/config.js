@@ -14,8 +14,11 @@ export default {
     waveClearBonusMultiplier: 10000,
     bonusMultiplierIncreaseRate: 0.25,
     color: 'red',
-    highScoreColor: 'blue'
+    highScoreColor: 'blue',
+
+    size: 20,
   },
+
 
   time: {
     max: 30,

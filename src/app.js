@@ -1,81 +1,75 @@
-import BaseApp from './base-app';
-import Config from './config';
-import Field from './field';
-import Time from './time';
-import Score from './score';
-import Bubble from './bubble';
-import Bullet from './bullet';
-import Player from './player';
-import Trail from './trail';
-import Burst from './burst';
+export default class App {
+  constructor(canvasSelector, initialScene) {
+    this.initializeCanvas(canvasSelector);
+    this.keys = {};
 
-Object.assign(window, {
-  Player,
-  Time,
-  Config,
-  Bubble,
-  Bullet,
-  Score,
-  Trail,
-  Field,
-  Burst
-});
+    this.shouldResize = true;
 
-export default class App extends BaseApp {
-  init() {
-    Field.init();
-    Player.init();
-    Bubble.init();
-    Bullet.init();
-    Time.init();
-    Score.init();
-    Trail.init();
-    Burst.init();
+    this.transitionToScene(initialScene);
   }
 
-  update(dt, keys) {
-    if (Time.slow) {
-      dt /= Time.slowFactor;
+  get width() {
+    return this.canvas.width;
+  }
+
+  get height() {
+    return this.canvas.height;
+  }
+
+  resizeCanvas() {
+    const doc = document.documentElement;
+    if ((this.width !== doc.clientWidth) ||
+      (this.height !== doc.clientHeight)) {
+      this.canvas.width = doc.clientWidth;
+      this.canvas.height = doc.clientHeight;
     }
-
-    Player.update(dt, keys);
-    Trail.update(dt);
-    Burst.update(dt);
-    Bubble.update(dt);
-    Bullet.update(dt);
-    Time.update(dt, keys);
-    Score.update(dt);
   }
 
-  draw(ctx) {
-    ctx.clearRect(0, 0, this.width, this.height);
-    ctx.fillStyle = 'black';
-    ctx.fillRect(0, 0, this.width, this.height);
+  update(dt) {
+    if (this.shouldResize) {
+      this.resizeCanvas();
+    }
+    if (this.currentScene) {
+      if (this.currentScene.update) {
+        this.currentScene.update(dt, this.keys);
+      }
+      if (this.currentScene.draw) {
+        this.currentScene.draw(this.ctx);
+      }
+    }
+  }
 
-    ctx.save();
-    ctx.translate(0.5, 0.5);
+  transitionToScene(scene) {
+    if (this.currentScene && this.currentScene.exit) {
+      this.currentScene.exits(scene);
+    }
+    this.currentScene = scene;
+    if (this.currentScene.init) {
+      this.currentScene.init(this);
+    }
+  }
 
-    ctx.save();
-    ctx.translate(60, 60);
+  onKeyDown(key) {
+    if (this.currentScene.onKeyDown) {
+      this.currentScene.onKeyDown(key);
+    }
+  }
 
-    Bubble.draw(ctx);
-    Trail.draw(ctx);
-    Burst.draw(ctx);
-    Bullet.draw(ctx);
-    Player.draw(ctx);
-    Field.draw(ctx);
+  onKeyUp(key) {
+    if (this.currentScene.onKeyUp) {
+      this.currentScene.onKeyUp(key);
+    }
+  }
 
-    ctx.save();
-    ctx.translate(0, -20);
-    Score.draw(ctx);
-    ctx.restore();
+  initializeCanvas(canvasSelector) {
+    this.canvas = document.querySelector(canvasSelector);
+    this.canvas.tabIndex = 1;
+    this.resizeCanvas();
 
-    ctx.save();
-    ctx.translate(20 + Field.width, 0);
-    Time.draw(ctx);
-    ctx.restore();
+    this.ctx = this.canvas.getContext('2d');
 
-    ctx.restore();
-    ctx.restore();
+    this.canvas.addEventListener('keydown', e => this.onKeyDown(e.key));
+    this.canvas.addEventListener('keyup', e => this.onKeyUp(e.key));
   }
 }
+
