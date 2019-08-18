@@ -139,11 +139,9 @@ export default class Bubble {
     ctx.arc(0, 0, this.size, 0, Math.PI * 2);
 
     ctx.fillStyle = 'black';
-    ctx.globalAlpha = 0.75;
     ctx.fill();
 
     ctx.strokeStyle = Bubble.bubbleColor;
-    ctx.globalAlpha = 1;
     ctx.stroke();
 
     ctx.beginPath();
@@ -161,35 +159,18 @@ export default class Bubble {
     ctx.beginPath();
     ctx.arc(0, 0, this.size / 2, 0, Math.PI * 2);
     ctx.strokeStyle = Bubble.activeTextColor;
+
     if (this.flash) {
       ctx.fillStyle = Bubble.activeTextColor;
       this.flash = false;
     }
+
     ctx.fill();
     ctx.stroke();
-
-    //const levelString = this.level <= 15 ? this.level.toString(16) : '+';
-    //ctx.globalAlpha = this.progress * this.progress;
-    //ctx.strokeStyle = this.active ? Bubble.activeTextColor : Bubble.textColor;
-    //ctx.strokeStyle = Bubble.textColor;
-    //drawCharacter(ctx, levelString, 0, 0, this.size / 2, true);
 
     ctx.restore();
     ctx.restore();
   }
-
-  //drawSignal(ctx) {
-    //if (this.active) {
-    //ctx.save();
-    //ctx.translate(this.x, this.y);
-      //ctx.globalAlpha = 1 - (this.progress * this.progress);
-      //ctx.strokeStyle = Bubble.signalColor;
-      //ctx.beginPath();
-      //ctx.arc(0, 0, this.signalSize, 0, Math.PI * 2);
-      //ctx.stroke();
-    //ctx.restore();
-    //}
-  //}
 
   pop() {
     this.dead = true;

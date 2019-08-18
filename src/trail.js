@@ -17,9 +17,7 @@ export default class Trail {
   static update(dt) {
     Trail.fadeTime = 1 / lerp(Time.normalized * Time.normalized, Trail.minFadeTime, Trail.maxFadeTime);
 
-    if (!Time.isBonusTime) {
-      Trail.segments.push(new Trail());
-    }
+    Trail.segments.push(new Trail());
 
     Trail.segments.forEach(segment => segment.update(dt));
     Trail.segments = Trail.segments.filter(segment => !segment.dead);

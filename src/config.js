@@ -1,4 +1,3 @@
-// TODO figure out color triads
 export default {
   field: {
     width: 640,
@@ -51,10 +50,11 @@ export default {
   burst: {
     fadeTime: 1.5,
     color: 'red',
-    amount: 5,
-    minSpeed: 20,
-    maxSpeed: 50,
-    size: 2,
+    amount: 75,
+    minSpeed: 25,
+    maxSpeed: 125,
+    minSize: 1,
+    maxSize: 8,
   },
 
   bullet: {

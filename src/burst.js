@@ -1,7 +1,7 @@
 import Config from './config';
 import Player from './player';
-import Time from './time';
 import { lerp } from './utils';
+import { BulletCollision } from './events';
 
 export default class Burst {
   static init() {
@@ -14,12 +14,6 @@ export default class Burst {
   }
 
   static update(dt) {
-    if (Time.isBonusTime && Player.isMoving) {
-      for (let i = 0; i < Burst.amount; i++) {
-        Burst.particles.push(new Burst());
-      }
-    }
-
     Burst.particles.forEach(particle => particle.update(dt));
     Burst.particles = Burst.particles.filter(particle => !particle.dead);
   }
@@ -28,25 +22,26 @@ export default class Burst {
     Burst.particles.forEach(particle => particle.draw(ctx));
   }
 
+  static makeBurst() {
+    for (let i = 0; i < Burst.amount; i++) {
+      Burst.particles.push(new Burst());
+    }
+  }
+
   constructor() {
     this.x = Player.x;
     this.y = Player.y;
-    this.vX = 0;
-    this.vY = 0;
-    this.angle = Math.atan2(Player.vY, Player.vX);
-    const offset = Math.random() * Math.PI * 2;
-    this.angle += offset;
-
+    this.angle = Math.random() * Math.PI * 2;
+    this.vX = Math.cos(this.angle);
+    this.vY = Math.sin(this.angle);
     this.speed = lerp(Math.random(), Burst.minSpeed, Burst.maxSpeed);
-    // if the player isn't moving then we don't want to deal with it
+    this.size = lerp(Math.random(), Burst.minSize, Burst.maxSize);
     this.dead = false;
     this.fade = 1;
   }
 
   update(dt) {
     const v = this.speed * (this.fade ** 0.25);
-    this.vX = Math.cos(this.angle);
-    this.vY = Math.sin(this.angle);
     this.x += this.vX * v * dt;
     this.y += this.vY * v * dt;
 
@@ -64,7 +59,7 @@ export default class Burst {
     ctx.translate(this.x, this.y);
     ctx.beginPath();
     ctx.moveTo(0, 0);
-    ctx.lineTo(this.vX * Burst.size, this.vY * Burst.size);
+    ctx.lineTo(this.vX * this.size, this.vY * this.size);
     ctx.strokeStyle = Burst.color;
     ctx.globalAlpha = this.fade;
     ctx.fillStyle = Burst.color;
@@ -73,3 +68,5 @@ export default class Burst {
     ctx.restore();
   }
 }
+
+BulletCollision.subscribe(Burst.makeBurst);
