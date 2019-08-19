@@ -10,109 +10,55 @@ import {
   WaveClear
 } from './events';
 
-export default class Bubble {
-  static init() {
-    Object.assign(Bubble, Config.bubble);
-    Bubble.reset();
-  }
+const Bubbles  = {
+  init() {
+    Object.assign(this, Config.bubble);
+    this.reset();
+  },
 
-  static reset() {
-    Bubble.bubbles = [];
-    Bubble.currentWave = 10;
-  }
+   reset() {
+    this.bubbles = [];
+    this.currentWave = 10;
+  },
 
-  static update(dt) {
-    if (Bubble.bubbles.length === 0) {
-      WaveClear.trigger(Bubble.currentWave);
-      Bubble.currentWave++;
-      Bubble.makeWave();
+  update(dt) {
+    if (this.bubbles.length === 0) {
+      WaveClear.trigger(this.currentWave);
+      this.currentWave++;
+      this.makeWave();
     }
 
     const aliveBubbles = [];
-    for (let i = 0, l = Bubble.bubbles.length; i < l; i++) {
-      const bubble = Bubble.bubbles[i];
-      bubble.update(dt);
+    for (let i = 0, l = this.bubbles.length; i < l; i++) {
+      const bubble = this.bubbles[i];
+      this.updateBubble(bubble, dt);
       if (!bubble.dead) {
         aliveBubbles.push(bubble);
       }
     }
 
-    Bubble.bubbles = aliveBubbles;
-  }
+    this.bubbles = aliveBubbles;
+  },
 
-  static draw(ctx) {
-    for (let i = 0, l = Bubble.bubbles.length; i < l; i++) {
-      const bubble = Bubble.bubbles[i];
-      bubble.draw(ctx);
+  draw(ctx) {
+    for (let i = 0, l = this.bubbles.length; i < l; i++) {
+      const bubble = this.bubbles[i];
+      this.drawBubble(bubble, ctx);
     }
+  },
 
-    //const length = Bubble.bubbles.length;
-
-    //for (let i = 0; i < length; i++) {
-      //const bubble = Bubble.bubbles[i];
-      //ctx.save();
-      //ctx.translate(bubble.x, bubble.y);
-      //bubble.drawBody(ctx);
-      //bubble.drawBodyStroke(ctx);
-      //ctx.restore();
-    //}
-
-    //for (let i = 0; i < length; i++) {
-      //const bubble = Bubble.bubbles[i];
-      //ctx.save();
-      //ctx.translate(bubble.x, bubble.y);
-      //bubble.drawBody(ctx);
-      //bubble.drawBodyFill(ctx);
-      //ctx.restore();
-    //}
-    //for (let i = 0; i < length; i++) {
-      //const bubble = Bubble.bubbles[i];
-      //ctx.save();
-      //ctx.translate(bubble.x, bubble.y);
-      //bubble.drawLid(ctx);
-      //bubble.drawLidStroke(ctx);
-      //ctx.restore();
-    //}
-
-    //for (let i = 0; i < length; i++) {
-      //const bubble = Bubble.bubbles[i];
-      //ctx.save();
-      //ctx.translate(bubble.x, bubble.y);
-      //bubble.drawLid(ctx);
-      //bubble.drawLidFill(ctx);
-      //ctx.restore();
-    //}
-    //for (let i = 0; i < length; i++) {
-      //const bubble = Bubble.bubbles[i];
-      //ctx.save();
-      //ctx.translate(bubble.x, bubble.y);
-      //bubble.drawEye(ctx);
-      //bubble.drawEyeStroke(ctx);
-      //ctx.restore();
-    //}
-
-    //for (let i = 0; i < length; i++) {
-      //const bubble = Bubble.bubbles[i];
-      //ctx.save();
-      //ctx.translate(bubble.x, bubble.y);
-      //bubble.drawEye(ctx);
-      //bubble.drawEyeFill(ctx);
-      //ctx.restore();
-    //}
-  }
-
-  static makeWave() {
-    const { currentWave } = Bubble;
+   makeWave() {
+    const { currentWave } = this;
     for (let i = 0; i < currentWave; i++) {
       const bubbleCountForThisLevel = currentWave - i + 2;
       for (let j = 0; j < bubbleCountForThisLevel; j++) {
         const level = Math.min(16, j + 1);
-        Bubble.bubbles.push(new Bubble(level));
+        this.bubbles.push(this.createBubble(level));
       }
     }
 
     const placedBubbles = [];
-    Bubble.bubbles.sort((a, b) => a.size > b.size ? -1 : 1).forEach(bubble => {
+    this.bubbles.sort((a, b) => a.size > b.size ? -1 : 1).forEach(bubble => {
       const { size } = bubble;
 
       const minX = size;
@@ -121,7 +67,7 @@ export default class Bubble {
       const maxY = Field.height - size;
 
       let placed = false;
-      let attemptsRemaining = Bubble.placementAttempts;
+      let attemptsRemaining = this.placementAttempts;
 
       while (!placed && attemptsRemaining) {
           bubble.x = Math.random() * (maxX - minX) + minX;
@@ -148,129 +94,64 @@ export default class Bubble {
     });
 
     Time.setRateFromWave(currentWave);
-  }
+  },
 
-  static killAllActiveBubbles() {
-    Bubble.bubbles.forEach(bubble => {
+   killAllActiveBubbles() {
+    this.bubbles.forEach(bubble => {
       if (bubble.active) {
         bubble.dead = true;
       }
     });
-  }
+  },
 
-  constructor(level) {
-    // position gets set in Bubble.makeWave()
-    this.x = 0;
-    this.y = 0;
-    this.level = level;
-    this.size = (level + 1) * Bubble.sizeMultiplier;
-    this.dead = false;
-    this.active = false;
-    this.fadeRate = (this.level * Bubble.timeMultiplier * Bubble.fadeRate);
-    this.fade = 1;
-    this.flash = false;
-  }
+  createBubble(level) {
+    // position gets set in Bubbles.makeWave()
+    const bubble = {};
+    bubble.x = 0;
+    bubble.y = 0;
+    bubble.level = level;
+    bubble.size = (level + 1) * this.sizeMultiplier;
+    bubble.dead = false;
+    bubble.active = false;
+    bubble.fadeRate = level * this.timeMultiplier * this.fadeRate;
+    bubble.fade = 1;
+    bubble.flash = false;
 
-  update(dt) {
-    const isColliding = checkCircularCollision(this, Player);
+    return bubble;
+  },
 
-    if (isColliding && !this.active) {
-      this.active = true;
-      this.flash = true;
+  updateBubble(bubble, dt) {
+    const isColliding = checkCircularCollision(bubble, Player);
+
+    if (isColliding && !bubble.active) {
+      bubble.active = true;
+      bubble.flash = true;
     }
 
-    if (this.active) {
-      this.fade -=  dt / this.fadeRate;
+    if (bubble.active) {
+      bubble.fade -=  dt / bubble.fadeRate;
     }
 
-    if (this.fade <= 0) {
-      this.fade = 0;
-      this.pop();
+    if (bubble.fade <= 0) {
+      bubble.fade = 0;
+      this.popBubble(bubble);
     }
-  }
+  },
 
-  //drawBody(ctx) {
-    //ctx.beginPath();
-    //ctx.arc(0, 0, this.size, 0, Math.PI * 2);
-  //}
-
-  //drawBodyFill(ctx) {
-    //ctx.fillStyle = Bubble.COLOR_BG.value;
-    //ctx.fill();
-  //}
-
-  //drawBodyStroke(ctx) {
-    //ctx.strokeStyle = Bubble.color.value;
-    //ctx.stroke();
-
-  //}
-
-  //drawLid(ctx) {
-    //ctx.beginPath();
-    //ctx.ellipse(0, 0, this.size, this.size * this.progress, 0, 0, Math.PI);
-    //ctx.ellipse(0, 0, this.size, this.size * this.progress, 0, Math.PI, 0);
-  //}
-
-  //drawLidFill(ctx) {
-    //ctx.fillStyle = Bubble.COLOR_BG.value;
-    //ctx.fill();
-  //}
-
-  //drawLidStroke(ctx) {
-    //ctx.strokeStyle = Bubble.color.value;
-    //ctx.stroke();
-  //}
-
-  //drawEye(ctx) {
-    //this.drawLid(ctx);
-    //ctx.save();
-    //ctx.clip();
-
-    //const angle = Math.atan2(Player.y - this.y, Player.x - this.x);
-    //const offsetX = (this.size / 6) * Math.cos(angle);
-    //const offsetY = (this.size / 6) * Math.sin(angle);
-    //ctx.save();
-    //ctx.translate(offsetX, offsetY);
-    //ctx.beginPath();
-    //ctx.arc(0, 0, this.size / 2, 0, Math.PI * 2);
-
-  //}
-
-  //drawEyeFill(ctx) {
-    //ctx.fillStyle = Bubble.backgroundColor.value;
-    //if (this.flash) {
-      //ctx.fillStyle = Bubble.pupilColor.value;
-      //this.flash = false;
-    //}
-
-    //ctx.fill();
-
-    //ctx.restore();
-    //ctx.restore();
-  //}
-
-  //drawEyeStroke(ctx) {
-    //ctx.strokeStyle = Bubble.pupilColor.value;
-    //ctx.stroke();
-
-    //ctx.restore();
-    //ctx.restore();
-  //}
-
-  draw(ctx) {
-    ctx.fillStyle = Bubble.backgroundColor.value;
-    ctx.strokeStyle = Bubble.color.value;
+  drawBubble(bubble, ctx) {
+    ctx.fillStyle = this.backgroundColor.value;
+    ctx.strokeStyle = this.color.value;
 
     // eye
     ctx.beginPath();
-    ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
+    ctx.arc(bubble.x, bubble.y, bubble.size, 0, Math.PI * 2);
     ctx.fill();
     ctx.stroke();
 
     // lid
     ctx.beginPath();
-    ctx.ellipse(this.x, this.y, this.size, this.size * this.fade, 0, 0, Math.PI);
-    ctx.ellipse(this.x, this.y, this.size, this.size * this.fade, 0, Math.PI, 0);
+    ctx.ellipse(bubble.x, bubble.y, bubble.size, bubble.size * bubble.fade, 0, 0, Math.PI);
+    ctx.ellipse(bubble.x, bubble.y, bubble.size, bubble.size * bubble.fade, 0, Math.PI, 0);
     ctx.fill();
     ctx.stroke();
 
@@ -278,29 +159,31 @@ export default class Bubble {
     ctx.clip();
 
     // pupil
-    const angle = Math.atan2(Player.y - this.y, Player.x - this.x);
-    const offsetX = (this.size / 6) * Math.cos(angle);
-    const offsetY = (this.size / 6) * Math.sin(angle);
+    const angle = Math.atan2(Player.y - bubble.y, Player.x - bubble.x);
+    const offsetX = (bubble.size / 6) * Math.cos(angle);
+    const offsetY = (bubble.size / 6) * Math.sin(angle);
     ctx.beginPath();
-    ctx.arc(this.x + offsetX, this.y + offsetY, this.size / 2, 0, Math.PI * 2);
+    ctx.arc(bubble.x + offsetX, bubble.y + offsetY, bubble.size / 2, 0, Math.PI * 2);
 
-    if (this.flash) {
-      ctx.fillStyle = Bubble.pupilColor.value;
-      this.flash = false;
+    if (bubble.flash) {
+      ctx.fillStyle = this.pupilColor.value;
+      bubble.flash = false;
     }
-    ctx.strokeStyle = Bubble.pupilColor.value;
+    ctx.strokeStyle = this.pupilColor.value;
 
     ctx.fill();
     ctx.stroke();
 
     ctx.restore();
-  }
+  },
 
-  pop() {
-    this.dead = true;
-    Bullet.makeBulletsFromBubble(this);
-    BubblePop.trigger(this.level);
+  popBubble(bubble) {
+    bubble.dead = true;
+    Bullet.makeBulletsFromBubble(bubble);
+    BubblePop.trigger(bubble.level);
   }
 }
 
-BulletCollision.subscribe(Bubble.killAllActiveBubbles);
+BulletCollision.subscribe(Bubbles.killAllActiveBubbles.bind(Bubbles));
+
+export default Bubbles;

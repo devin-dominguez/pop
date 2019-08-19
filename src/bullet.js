@@ -46,7 +46,6 @@ const Bullets  = {
       return;
     }
     this.initBullet(bullet, x, y, vX, vY);
-    bullet.free = false;
 
     this.bullets.push(bullet);
   },
@@ -68,7 +67,6 @@ const Bullets  = {
       if (!bullet.dead) {
         aliveBullets.push(bullet);
       } else {
-        bullet.free = true;
         this.freeItems.push(bullet.idx);
       }
     }
