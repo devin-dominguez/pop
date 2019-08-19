@@ -1,9 +1,30 @@
+//const COLOR_A = 'red';
+//const COLOR_B = 'blue';
+//const COLOR_BG = 'black';
+//const COLOR_FG = 'white';
+const COLOR_A = '#ff7573';
+const COLOR_B = '#73b7ff';
+const COLOR_BG = '#black';
+const COLOR_FG = 'white';
+
 export default {
+  backgroundColor: COLOR_BG,
+
   field: {
     width: 640,
     height: 480,
-    color: 'red',
-    flashColor: 'white'
+    color: COLOR_A,
+    flashColor: COLOR_FG
+  },
+
+  backDrop: {
+    color: COLOR_A,
+    backgroundColor: COLOR_BG,
+    rayCount: 16,
+    rayAngle: Math.PI / 32,
+    rayRotationSpeed: Math.PI / 32,
+    widthRatio: 1 / 4,
+    riseAmount: 0.75
   },
 
   score: {
@@ -13,8 +34,8 @@ export default {
     maxBonusMultiplier: 16,
     waveClearBonusMultiplier: 10000,
     bonusMultiplierIncreaseRate: 0.25,
-    color: 'red',
-    highScoreColor: 'blue',
+    color: COLOR_A,
+    highScoreColor: COLOR_FG,
 
     size: 20,
   },
@@ -37,19 +58,20 @@ export default {
     bulletEscapeBonus: 0.0666,
 
     containerWidth: 32,
-    containerColor: 'red',
-    fillColor: 'pink'
+    padding: 8,
+    containerColor: COLOR_A,
+    fillColor: COLOR_B
   },
 
   trail: {
     minFadeTime: 0.01,
     maxFadeTime: 3,
-    color: 'red'
+    color: COLOR_A
   },
 
   burst: {
     fadeTime: 0.5,
-    color: 'red',
+    color: COLOR_A,
     amount: 32,
     minSpeed: 100,
     maxSpeed: 250,
@@ -64,26 +86,25 @@ export default {
     fadeTime: 1,
     bubbleMultiplier: 3,
 
-    color: 'white',
-    escapedColor: 'red'
+    color: COLOR_FG,
+    escapedColor: COLOR_A
   },
 
   player: {
     size: 12,
     hitboxSize: 2,
     speed: 300,
-    triggerColor: 'white',
-    hitboxColor: 'red'
+    triggerColor: COLOR_FG,
+    hitboxColor: COLOR_A
   },
 
   bubble: {
     sizeMultiplier: 5,
     signalMultiplier: 2.5,
     countdownSpeed: 36,
-    placementAttempts: 500,
-    bubbleColor: 'blue',
-    signalColor: 'green',
-    textColor: 'gray',
-    activeTextColor: 'red'
+    placementAttempts: 150,
+    color: COLOR_B,
+    pupilColor: COLOR_A,
+    backgroundColor: COLOR_BG
   }
 };

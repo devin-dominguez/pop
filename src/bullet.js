@@ -5,7 +5,8 @@ import Player from './player';
 import Field from './field';
 import { checkCircularCollision } from './utils';
 import {
-  BulletCollision
+  BulletCollision,
+  WaveClear
 } from './events';
 
 export default class Bullet {
@@ -29,6 +30,10 @@ export default class Bullet {
 
   static killAll() {
     Bullet.bullets.forEach(bullet => bullet.dead = true);
+  }
+
+  static escapeAll() {
+    Bullet.bullets.forEach(bullet => bullet.escaped = true);
   }
 
   static makeBulletsFromBubble(bubble) {
@@ -118,3 +123,5 @@ export default class Bullet {
       (this.y < 0);
   }
 }
+
+WaveClear.subscribe(Bullet.escapeAll);

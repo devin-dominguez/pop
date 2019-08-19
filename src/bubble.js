@@ -138,10 +138,10 @@ export default class Bubble {
     ctx.beginPath();
     ctx.arc(0, 0, this.size, 0, Math.PI * 2);
 
-    ctx.fillStyle = 'black';
+    ctx.fillStyle = Bubble.COLOR_BG;
     ctx.fill();
 
-    ctx.strokeStyle = Bubble.bubbleColor;
+    ctx.strokeStyle = Bubble.color;
     ctx.stroke();
 
     ctx.beginPath();
@@ -159,10 +159,10 @@ export default class Bubble {
     ctx.translate(offsetX, offsetY);
     ctx.beginPath();
     ctx.arc(0, 0, this.size / 2, 0, Math.PI * 2);
-    ctx.strokeStyle = Bubble.activeTextColor;
+    ctx.strokeStyle = Bubble.pupilColor;
 
     if (this.flash) {
-      ctx.fillStyle = Bubble.activeTextColor;
+      ctx.fillStyle = Bubble.pupilColor;
       this.flash = false;
     }
 

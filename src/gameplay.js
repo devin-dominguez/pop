@@ -7,6 +7,7 @@ import Player from './player';
 import Trail from './trail';
 import Burst from './burst';
 import Backdrop from './backdrop';
+import Config from './config';
 
 import {
   GameOver
@@ -74,7 +75,7 @@ const Gameplay = {
 
   draw(ctx) {
     ctx.clearRect(0, 0, this.app.width, this.app.height);
-    ctx.fillStyle = 'black';
+    ctx.fillStyle = Config.backgroundColor;
     ctx.fillRect(0, 0, this.app.width, this.app.height);
 
 
