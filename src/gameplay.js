@@ -6,6 +6,7 @@ import Bullet from './bullet';
 import Player from './player';
 import Trail from './trail';
 import Burst from './burst';
+import Backdrop from './backdrop';
 
 import {
   GameOver
@@ -26,6 +27,7 @@ const Gameplay = {
     Score.reset();
     Trail.reset();
     Burst.reset();
+    Backdrop.init();
   },
 
   update(dt) {
@@ -34,6 +36,7 @@ const Gameplay = {
     }
 
     Player.update(dt, this.keys);
+    Backdrop.update(dt);
     Trail.update(dt);
     Burst.update(dt);
     Bubble.update(dt);
@@ -80,6 +83,7 @@ const Gameplay = {
     ctx.save();
     ctx.translate(0.5, 0.5);
 
+    Backdrop.draw(ctx);
     Bubble.draw(ctx);
     Trail.draw(ctx);
     Burst.draw(ctx);

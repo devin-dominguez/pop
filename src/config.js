@@ -48,13 +48,14 @@ export default {
   },
 
   burst: {
-    fadeTime: 1.5,
+    fadeTime: 0.5,
     color: 'red',
-    amount: 75,
-    minSpeed: 25,
-    maxSpeed: 125,
+    amount: 32,
+    minSpeed: 100,
+    maxSpeed: 250,
     minSize: 1,
-    maxSize: 8,
+    maxSize: 4,
+    angleRange: Math.PI / 8
   },
 
   bullet: {

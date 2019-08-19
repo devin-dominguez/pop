@@ -1,3 +1,4 @@
+// TODO organize file structure
 // TODO better colors/themes/auto-color generation/ add color class with lerp
 // TODO better bonus indication (eyes look up?)
 // TODO change slomo to render active things inert (no points/time)
@@ -9,6 +10,7 @@
 // TODO make non-gameplay scenes look nicer
 // TODO refactor bubbleto handle countdown timing better
 // TODO optimize (OBJECT POOLS)
+// TODO directional burst
 // TODO add midi/audio events
 import App from './app';
 import AppRunner from './app-runner';

@@ -149,6 +149,7 @@ export default class Bubble {
     ctx.ellipse(0, 0, this.size, this.size * this.progress, 0, Math.PI, 0);
     ctx.fill();
     ctx.stroke();
+    ctx.save();
     ctx.clip();
 
     const angle = Math.atan2(Player.y - this.y, Player.x - this.x);
@@ -168,6 +169,7 @@ export default class Bubble {
     ctx.fill();
     ctx.stroke();
 
+    ctx.restore();
     ctx.restore();
     ctx.restore();
   }

@@ -78,7 +78,7 @@ export default class Bullet {
       );
       if (collision) {
         Bullet.killAll();
-        BulletCollision.trigger();
+        BulletCollision.trigger(this);
       }
     }
 
