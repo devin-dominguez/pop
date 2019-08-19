@@ -61,6 +61,7 @@ export default class Bullet {
     this.escaped = false;
     this.dead = false;
     this.fadeTime = Bullet.fadeTime;
+    this.waveEscape = false;
   }
 
   update(dt) {
@@ -101,9 +102,13 @@ export default class Bullet {
     const size = Bullet.size * (this.fadeTime / Bullet.fadeTime);
     ctx.arc(0, 0, size, 0, Math.PI * 2);
 
-    ctx.strokeStyle =  Bullet.color;
-    ctx.fillStyle =  Bullet.escapedColor;
-    this.escaped ? ctx.fill() : ctx.stroke();
+    ctx.fillStyle =  this.escaped ? Bullet.escapedColor : Bullet.backgroundColor;
+    ctx.fill();
+
+    if (!this.escaped) {
+      ctx.strokeStyle =  Bullet.color;
+      ctx.stroke();
+    }
 
     ctx.restore();
   }

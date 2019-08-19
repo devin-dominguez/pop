@@ -1,4 +1,5 @@
 // TODO organize file structure
+// try blend modes w/ offline canvas
 // better colors/themes/auto-color generation/ add color class with lerp
 // better bonus indication (eyes look up?)
 // backdrop needs to fade out when bonus ends

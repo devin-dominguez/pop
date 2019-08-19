@@ -43,7 +43,7 @@ export default class Score {
 
   static draw(ctx) {
     ctx.save();
-    ctx.strokeStyle = Score.isHighScore ? Score.highScoreColor : Score.color;
+    ctx.strokeStyle = Score.color;
 
     drawString(ctx, Score.scoreString, 0, 0, Score.size);
 

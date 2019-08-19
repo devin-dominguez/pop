@@ -34,8 +34,7 @@ export default {
     maxBonusMultiplier: 16,
     waveClearBonusMultiplier: 10000,
     bonusMultiplierIncreaseRate: 0.25,
-    color: COLOR_A,
-    highScoreColor: COLOR_FG,
+    color: COLOR_FG,
 
     size: 20,
   },
@@ -87,6 +86,7 @@ export default {
     bubbleMultiplier: 3,
 
     color: COLOR_FG,
+    backgroundColor: COLOR_BG,
     escapedColor: COLOR_A
   },
 
