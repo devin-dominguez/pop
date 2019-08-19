@@ -1,6 +1,6 @@
 export default class App {
-  constructor(canvasSelector, initialScene) {
-    this.initializeCanvas(canvasSelector);
+  constructor(canvasSelector, initialScene, contextOptions) {
+    this.initializeCanvas(canvasSelector, contextOptions);
     this.keys = {};
 
     this.shouldResize = true;
@@ -61,12 +61,12 @@ export default class App {
     }
   }
 
-  initializeCanvas(canvasSelector) {
+  initializeCanvas(canvasSelector, contextOptions) {
     this.canvas = document.querySelector(canvasSelector);
     this.canvas.tabIndex = 1;
     this.resizeCanvas();
 
-    this.ctx = this.canvas.getContext('2d');
+    this.ctx = this.canvas.getContext('2d', contextOptions);
 
     this.canvas.addEventListener('keydown', e => this.onKeyDown(e.key));
     this.canvas.addEventListener('keyup', e => this.onKeyUp(e.key));

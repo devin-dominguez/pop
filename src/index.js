@@ -1,9 +1,8 @@
 // TODO organize file structure
 // refactor classes into objects
 // refactor module lifecycle
-// change rays to lines in backdrop
 // try blend modes w/ offline canvas
-// draw layers for bubbles
+// !!!! draw layers for bubbles
 // better colors/themes/auto-color generation/ add color class with lerp
 // better bonus indication (eyes look up?)
 // backdrop needs to fade out when bonus ends
@@ -41,7 +40,7 @@ Player.init();
 Trail.init();
 Burst.init();
 
-const app = new App('#canvas', Title);
+const app = new App('#canvas', Title, { alpha: false });
 const appRunner = new AppRunner(app);
 
 appRunner.start();
