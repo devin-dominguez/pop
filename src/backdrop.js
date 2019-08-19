@@ -28,7 +28,7 @@ export default class Backdrop {
 
     // clip
     ctx.fillStyle = Backdrop.backgroundColor.value;
-    ctx.fillRect(0, 0, Field.width, Field.height);
+    ctx.rect(0, 0, Field.width, Field.height);
     ctx.save();
     ctx.clip();
 
@@ -50,11 +50,11 @@ export default class Backdrop {
     ctx.beginPath();
     ctx.arc(offsetX, offsetY, sunSize, 0, Math.PI * 2);
 
-    ctx.strokeStyle = Backdrop.color.scaled(progress);
-    ctx.stroke();
-
     ctx.fillStyle = Backdrop.backgroundColor.value;
     ctx.fill();
+
+    ctx.strokeStyle = Backdrop.color.scaled(progress);
+    ctx.stroke();
 
     ctx.restore(); // clip
 

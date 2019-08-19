@@ -18,7 +18,7 @@ const Bubbles  = {
 
    reset() {
     this.bubbles = [];
-    this.currentWave = 10;
+    this.currentWave = 0;
   },
 
   update(dt) {

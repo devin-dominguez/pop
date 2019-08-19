@@ -17,8 +17,7 @@ export default {
   backDrop: {
     color: COLOR_A,
     backgroundColor: COLOR_BG,
-    rayCount: 16,
-    rayAngle: Math.PI / 32,
+    rayCount: 32,
     rayRotationSpeed: Math.PI / 32,
     widthRatio: 1 / 4,
     riseAmount: 0.75
@@ -35,7 +34,6 @@ export default {
 
     size: 20,
   },
-
 
   time: {
     max: 30,
