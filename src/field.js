@@ -14,8 +14,6 @@ export default class Field  {
   }
 
   static draw(ctx) {
-    ctx.save();
-
     if (Field.flash) {
       Field.flash = false;
       ctx.fillStyle = Field.flashColor;
@@ -24,9 +22,6 @@ export default class Field  {
 
     ctx.strokeStyle = Field.color;
     ctx.strokeRect(0, 0, Field.width, Field.height);
-
-
-    ctx.restore();
   }
 
   static onBulletCollision() {

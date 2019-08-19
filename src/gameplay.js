@@ -69,20 +69,16 @@ const Gameplay = {
     let offsetY =  (height / 2) - paddingY;
     offsetY = (this.app.height / 2) - (scale * offsetY);
 
-    ctx.translate(offsetX, offsetY);
-    ctx.scale(scale, scale);
+    ctx.setTransform(scale, 0, 0, scale, offsetX, offsetY);
   },
 
   draw(ctx) {
-    ctx.clearRect(0, 0, this.app.width, this.app.height);
+    ctx.setTransform(1, 0, 0, 1, 0, 0);
+    //ctx.clearRect(0, 0, this.app.width, this.app.height);
     ctx.fillStyle = Config.backgroundColor;
     ctx.fillRect(0, 0, this.app.width, this.app.height);
 
-
-    ctx.save();
     this.transformToFitCanvas(ctx);
-    ctx.save();
-    ctx.translate(0.5, 0.5);
 
     Backdrop.draw(ctx);
     Bubble.draw(ctx);
@@ -100,9 +96,6 @@ const Gameplay = {
     ctx.save();
     ctx.translate(20 + Field.width, 0);
     Time.draw(ctx);
-    ctx.restore();
-
-    ctx.restore();
     ctx.restore();
   },
 

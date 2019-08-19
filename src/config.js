@@ -4,7 +4,7 @@
 //const COLOR_FG = 'white';
 const COLOR_A = '#ff7573';
 const COLOR_B = '#73b7ff';
-const COLOR_BG = '#black';
+const COLOR_BG = 'black';
 const COLOR_FG = 'white';
 
 export default {
@@ -100,8 +100,8 @@ export default {
 
   bubble: {
     sizeMultiplier: 5,
-    signalMultiplier: 2.5,
-    countdownSpeed: 36,
+    timeMultiplier: 0.25,
+    fadeRate: 1,
     placementAttempts: 150,
     color: COLOR_B,
     pupilColor: COLOR_A,

@@ -1,5 +1,9 @@
 // TODO organize file structure
+// refactor classes into objects
+// refactor module lifecycle
+// change rays to lines in backdrop
 // try blend modes w/ offline canvas
+// draw layers for bubbles
 // better colors/themes/auto-color generation/ add color class with lerp
 // better bonus indication (eyes look up?)
 // backdrop needs to fade out when bonus ends
@@ -10,8 +14,8 @@
 // add wave and bonus indicators to score MAYBE
 // add layout stuff to config and make look better
 // make non-gameplay scenes look nicer
-// refactor bubble to handle countdown timing better
-// optimize (OBJECT POOLS, memoize getters)
+// refactor entities to handle countdown timing better
+// optimize (OBJECT POOLS, makewave, etc...)
 // make tweak panel
 // add midi/audio events
 import App from './app';

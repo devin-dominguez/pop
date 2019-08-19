@@ -3,7 +3,6 @@ import Field from './field';
 import Player from './player';
 import Bullet from './bullet';
 import Time from './time';
-//import { drawCharacter } from './text';
 import { checkCircularCollision } from './utils';
 import {
   BulletCollision,
@@ -19,7 +18,7 @@ export default class Bubble {
 
   static reset() {
     Bubble.bubbles = [];
-    Bubble.currentWave = 0;
+    Bubble.currentWave = 10;
   }
 
   static update(dt) {
@@ -29,13 +28,77 @@ export default class Bubble {
       Bubble.makeWave();
     }
 
-    Bubble.bubbles.forEach(bubble => bubble.update(dt));
-    Bubble.bubbles = Bubble.bubbles.filter(bubble => !bubble.dead);
+    const aliveBubbles = [];
+    for (let i = 0, l = Bubble.bubbles.length; i < l; i++) {
+      const bubble = Bubble.bubbles[i];
+      bubble.update(dt);
+      if (!bubble.dead) {
+        aliveBubbles.push(bubble);
+      }
+    }
+
+    Bubble.bubbles = aliveBubbles;
   }
 
   static draw(ctx) {
-    Bubble.bubbles.forEach(bubble => bubble.draw(ctx));
-    //Bubble.bubbles.forEach(bubble => bubble.drawSignal(ctx));
+    for (let i = 0, l = Bubble.bubbles.length; i < l; i++) {
+      const bubble = Bubble.bubbles[i];
+      bubble.draw(ctx);
+    }
+
+    //const length = Bubble.bubbles.length;
+
+    //for (let i = 0; i < length; i++) {
+      //const bubble = Bubble.bubbles[i];
+      //ctx.save();
+      //ctx.translate(bubble.x, bubble.y);
+      //bubble.drawBody(ctx);
+      //bubble.drawBodyStroke(ctx);
+      //ctx.restore();
+    //}
+
+    //for (let i = 0; i < length; i++) {
+      //const bubble = Bubble.bubbles[i];
+      //ctx.save();
+      //ctx.translate(bubble.x, bubble.y);
+      //bubble.drawBody(ctx);
+      //bubble.drawBodyFill(ctx);
+      //ctx.restore();
+    //}
+    //for (let i = 0; i < length; i++) {
+      //const bubble = Bubble.bubbles[i];
+      //ctx.save();
+      //ctx.translate(bubble.x, bubble.y);
+      //bubble.drawLid(ctx);
+      //bubble.drawLidStroke(ctx);
+      //ctx.restore();
+    //}
+
+    //for (let i = 0; i < length; i++) {
+      //const bubble = Bubble.bubbles[i];
+      //ctx.save();
+      //ctx.translate(bubble.x, bubble.y);
+      //bubble.drawLid(ctx);
+      //bubble.drawLidFill(ctx);
+      //ctx.restore();
+    //}
+    //for (let i = 0; i < length; i++) {
+      //const bubble = Bubble.bubbles[i];
+      //ctx.save();
+      //ctx.translate(bubble.x, bubble.y);
+      //bubble.drawEye(ctx);
+      //bubble.drawEyeStroke(ctx);
+      //ctx.restore();
+    //}
+
+    //for (let i = 0; i < length; i++) {
+      //const bubble = Bubble.bubbles[i];
+      //ctx.save();
+      //ctx.translate(bubble.x, bubble.y);
+      //bubble.drawEye(ctx);
+      //bubble.drawEyeFill(ctx);
+      //ctx.restore();
+    //}
   }
 
   static makeWave() {
@@ -66,12 +129,12 @@ export default class Bubble {
 
         const noFit = placedBubbles.some(placedBubble => {
           return checkCircularCollision(
-            placedBubble.collisionCircle,
-            bubble.collisionCircle
+            placedBubble,
+            bubble
           );
         }) || checkCircularCollision(
-          Player.targetCollisionCircle,
-          bubble.collisionCircle
+          Player,
+          bubble
         );
 
         if (!noFit) {
@@ -103,16 +166,13 @@ export default class Bubble {
     this.size = (level + 1) * Bubble.sizeMultiplier;
     this.dead = false;
     this.active = false;
-    this.signalSize = this.size * Bubble.signalMultiplier;
-    this.progress = 1;
+    this.fadeRate = (this.level * Bubble.timeMultiplier * Bubble.fadeRate);
+    this.fade = 1;
     this.flash = false;
   }
 
   update(dt) {
-    const isColliding = checkCircularCollision(
-      this.collisionCircle,
-      Player.targetCollisionCircle
-    );
+    const isColliding = checkCircularCollision(this, Player);
 
     if (isColliding && !this.active) {
       this.active = true;
@@ -120,57 +180,119 @@ export default class Bubble {
     }
 
     if (this.active) {
-      this.signalSize -= Bubble.countdownSpeed * dt;
-      const originalSignal = this.size * Bubble.signalMultiplier;
-      this.progress = (this.signalSize - this.size) / (originalSignal - this.size)
+      this.fade -=  dt / this.fadeRate;
     }
 
-    if (this.signalSize <= this.size) {
-      this.signalSize = this.size;
+    if (this.fade <= 0) {
+      this.fade = 0;
       this.pop();
     }
   }
 
+  //drawBody(ctx) {
+    //ctx.beginPath();
+    //ctx.arc(0, 0, this.size, 0, Math.PI * 2);
+  //}
+
+  //drawBodyFill(ctx) {
+    //ctx.fillStyle = Bubble.COLOR_BG;
+    //ctx.fill();
+  //}
+
+  //drawBodyStroke(ctx) {
+    //ctx.strokeStyle = Bubble.color;
+    //ctx.stroke();
+
+  //}
+
+  //drawLid(ctx) {
+    //ctx.beginPath();
+    //ctx.ellipse(0, 0, this.size, this.size * this.progress, 0, 0, Math.PI);
+    //ctx.ellipse(0, 0, this.size, this.size * this.progress, 0, Math.PI, 0);
+  //}
+
+  //drawLidFill(ctx) {
+    //ctx.fillStyle = Bubble.COLOR_BG;
+    //ctx.fill();
+  //}
+
+  //drawLidStroke(ctx) {
+    //ctx.strokeStyle = Bubble.color;
+    //ctx.stroke();
+  //}
+
+  //drawEye(ctx) {
+    //this.drawLid(ctx);
+    //ctx.save();
+    //ctx.clip();
+
+    //const angle = Math.atan2(Player.y - this.y, Player.x - this.x);
+    //const offsetX = (this.size / 6) * Math.cos(angle);
+    //const offsetY = (this.size / 6) * Math.sin(angle);
+    //ctx.save();
+    //ctx.translate(offsetX, offsetY);
+    //ctx.beginPath();
+    //ctx.arc(0, 0, this.size / 2, 0, Math.PI * 2);
+
+  //}
+
+  //drawEyeFill(ctx) {
+    //ctx.fillStyle = Bubble.backgroundColor;
+    //if (this.flash) {
+      //ctx.fillStyle = Bubble.pupilColor;
+      //this.flash = false;
+    //}
+
+    //ctx.fill();
+
+    //ctx.restore();
+    //ctx.restore();
+  //}
+
+  //drawEyeStroke(ctx) {
+    //ctx.strokeStyle = Bubble.pupilColor;
+    //ctx.stroke();
+
+    //ctx.restore();
+    //ctx.restore();
+  //}
+
   draw(ctx) {
-    ctx.save();
-    ctx.translate(this.x, this.y);
-
-    ctx.beginPath();
-    ctx.arc(0, 0, this.size, 0, Math.PI * 2);
-
-    ctx.fillStyle = Bubble.COLOR_BG;
-    ctx.fill();
-
+    ctx.fillStyle = Bubble.backgroundColor;
     ctx.strokeStyle = Bubble.color;
-    ctx.stroke();
 
+    // eye
     ctx.beginPath();
-    ctx.ellipse(0, 0, this.size, this.size * this.progress, 0, 0, Math.PI);
-    ctx.ellipse(0, 0, this.size, this.size * this.progress, 0, Math.PI, 0);
+    ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
     ctx.fill();
     ctx.stroke();
+
+    // lid
+    ctx.beginPath();
+    ctx.ellipse(this.x, this.y, this.size, this.size * this.fade, 0, 0, Math.PI);
+    ctx.ellipse(this.x, this.y, this.size, this.size * this.fade, 0, Math.PI, 0);
+    ctx.fill();
+    ctx.stroke();
+
     ctx.save();
     ctx.clip();
 
+    // pupil
     const angle = Math.atan2(Player.y - this.y, Player.x - this.x);
     const offsetX = (this.size / 6) * Math.cos(angle);
     const offsetY = (this.size / 6) * Math.sin(angle);
-    ctx.save();
-    ctx.translate(offsetX, offsetY);
     ctx.beginPath();
-    ctx.arc(0, 0, this.size / 2, 0, Math.PI * 2);
-    ctx.strokeStyle = Bubble.pupilColor;
+    ctx.arc(this.x + offsetX, this.y + offsetY, this.size / 2, 0, Math.PI * 2);
 
     if (this.flash) {
       ctx.fillStyle = Bubble.pupilColor;
       this.flash = false;
     }
+    ctx.strokeStyle = Bubble.pupilColor;
 
     ctx.fill();
     ctx.stroke();
 
-    ctx.restore();
-    ctx.restore();
     ctx.restore();
   }
 
@@ -178,10 +300,6 @@ export default class Bubble {
     this.dead = true;
     Bullet.makeBulletsFromBubble(this);
     BubblePop.trigger(this.level);
-  }
-
-  get collisionCircle() {
-    return {x: this.x, y: this.y, size: this.size};
   }
 }
 

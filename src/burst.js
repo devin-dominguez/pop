@@ -14,12 +14,23 @@ export default class Burst {
   }
 
   static update(dt) {
-    Burst.particles.forEach(particle => particle.update(dt));
-    Burst.particles = Burst.particles.filter(particle => !particle.dead);
+    const aliveParticles = [];
+    for (let i = 0, l = Burst.particles.length; i < l; i++) {
+      const particle = Burst.particles[i];
+      particle.update(dt);
+      if (!particle.dead) {
+        aliveParticles.push(particle);
+      }
+    }
+
+    Burst.particles = aliveParticles;
   }
 
   static draw(ctx) {
-    Burst.particles.forEach(particle => particle.draw(ctx));
+    for (let i = 0, l = Burst.particles.length; i < l; i++) {
+      const particle = Burst.particles[i];
+      particle.draw(ctx);
+    }
   }
 
   static makeBurst() {
@@ -61,18 +72,13 @@ export default class Burst {
   }
 
   draw(ctx) {
-    ctx.save();
-    ctx.translate(this.x, this.y);
     ctx.beginPath();
-    ctx.moveTo(0, 0);
+    ctx.moveTo(this.x, this.y);
     const size = lerp(this.size, Burst.minSize, Burst.maxSize);
-    ctx.lineTo(this.vX * size, this.vY * size);
+    ctx.lineTo(this.x + this.vX * size, this.y + this.vY * size);
+    //ctx.globalAlpha = this.fade;
     ctx.strokeStyle = Burst.color;
-    ctx.globalAlpha = this.fade;
-    ctx.fillStyle = Burst.color;
     ctx.stroke();
-
-    ctx.restore();
   }
 }
 

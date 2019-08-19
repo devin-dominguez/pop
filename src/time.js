@@ -1,6 +1,5 @@
 import Config from './config';
 import Field from './field';
-import { constrain } from './utils';
 import {
   BulletCollision,
   BulletEscape,
@@ -19,6 +18,12 @@ export default class Time {
     Time.remaining = Time.initialTime;
     Time.countdownSpeed = Time.initialcountdownSpeed;
     Time.slow = false;
+    Time.normalized = Time.remaining / Time.max;
+    Time.isBonusTime = false;
+
+    Time.meterHeight = Field.height - (Time.padding * 2)
+    Time.bonusOffset = (1 - (Time.bonusTime / Time.max)) * Time.meterHeight;
+    Time.deathOffset = (1 - (Time.penalty / Time.max)) * Time.meterHeight;
   }
 
   static update(dt, keys) {
@@ -37,12 +42,17 @@ export default class Time {
       Time.remaining = Time.max;
     }
 
+    if (Time.remaining < 0) {
+      Time.remaining = 0;
+    }
+
+    Time.normalized = Time.remaining / Time.max;
+    Time.isBonusTime = Time.remaining > Time.bonusTime;
+
     Time.flash = Time.isBonusTime ? !Time.flash : false;
   }
 
   static draw(ctx) {
-    ctx.save();
-
     if (!Time.flash) {
       ctx.strokeStyle = Time.fillColor;
       ctx.strokeRect(
@@ -54,22 +64,18 @@ export default class Time {
     }
 
     ctx.strokeStyle = Time.containerColor;
+
     ctx.strokeRect(0, 0, Time.containerWidth, Field.height);
 
-    const height = Field.height - (Time.padding * 2);
-    const bonusOffset = (1 - (Time.bonusTime / Time.max)) * height;
     ctx.beginPath();
-    ctx.moveTo(0, bonusOffset);
-    ctx.lineTo(Time.containerWidth, bonusOffset);
+    ctx.moveTo(0, Time.bonusOffset);
+    ctx.lineTo(Time.containerWidth, Time.bonusOffset);
     ctx.stroke();
 
-    const deathOffset = (1 - (Time.penalty / Time.max)) * height;
     ctx.beginPath();
-    ctx.moveTo(0, deathOffset);
-    ctx.lineTo(Time.containerWidth, deathOffset);
+    ctx.moveTo(0, Time.deathOffset);
+    ctx.lineTo(Time.containerWidth, Time.deathOffset);
     ctx.stroke();
-
-    ctx.restore();
   }
 
   static onWaveClear() {
@@ -108,14 +114,6 @@ export default class Time {
 
   static setRateFromWave(wave) {
     Time.countdownSpeed = Time.initialCountdownSpeed + (wave - 1) / 8;
-  }
-
-  static get isBonusTime() {
-    return Time.remaining > Time.bonusTime;
-  }
-
-  static get normalized() {
-    return constrain(Time.remaining / Time.max);
   }
 }
 

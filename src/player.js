@@ -13,6 +13,12 @@ export default class Player {
     Player.y = Field.height / 2;
     Player.vX = 0;
     Player.vY = 0;
+
+    Player.hitboxCollisionCircle = {
+      x: Player.x,
+      y: Player.y,
+      size: Player.hitboxSize
+    };
   }
 
   static update(dt, keys) {
@@ -44,43 +50,21 @@ export default class Player {
     Player.y += dY * dt * Player.speed;
     Player.x = constrain(Player.x, 0, Field.width);
     Player.y = constrain(Player.y, 0, Field.height);
+
+    Player.hitboxCollisionCircle.x = Player.x;
+    Player.hitboxCollisionCircle.y = Player.y;
   }
 
   static draw(ctx) {
-    ctx.save();
-    ctx.translate(Player.x, Player.y);
-
+    ctx.beginPath();
+    ctx.arc(Player.x, Player.y, Player.size, 0, Math.PI * 2);
     ctx.strokeStyle = Player.triggerColor;
-    ctx.beginPath();
-    ctx.arc(0, 0, Player.size, 0, Math.PI * 2);
     ctx.stroke();
 
+    ctx.beginPath();
+    ctx.arc(Player.x, Player.y, Player.hitboxSize, 0, Math.PI * 2);
     ctx.strokeStyle = Player.hitboxColor;
-    ctx.beginPath();
-    ctx.arc(0, 0, Player.hitboxSize, 0, Math.PI * 2);
     ctx.stroke();
-
-    ctx.restore();
-  }
-
-  static get targetCollisionCircle() {
-    return {
-      x: Player.x,
-      y: Player.y,
-      size: Player.size
-    };
-  }
-
-  static get hitboxCollisionCircle() {
-    return {
-      x: Player.x,
-      y: Player.y,
-      size: Player.hitboxSize
-    };
-  }
-
-  static get isMoving() {
-    return Player.vX || Player.vY;
   }
 }
 

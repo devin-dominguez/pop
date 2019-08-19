@@ -19,29 +19,34 @@ export default class Trail {
 
     Trail.segments.push(new Trail());
 
-    Trail.segments.forEach(segment => segment.update(dt));
-    Trail.segments = Trail.segments.filter(segment => !segment.dead);
+    const aliveSegments = [];
+    for (let i = 0, l = Trail.segments.length; i < l; i++) {
+      const segment = Trail.segments[i];
+      segment.update(dt);
+      if (!segment.dead) {
+        aliveSegments.push(segment);
+      }
+    }
+
+    Trail.segments = aliveSegments;
   }
 
   static draw(ctx) {
-    ctx.save();
-
     ctx.strokeStyle = Trail.color;
     ctx.moveTo(Player.x, Player.y);
     ctx.beginPath();
 
-    Trail.segments.forEach((segment, idx) => {
-      ctx.globalAlpha = segment.fade;
+    for (let i = 0, l = Trail.segments.length; i < l; i++) {
+      const segment = Trail.segments[i];
+      //ctx.globalAlpha = segment.fade;
       ctx.lineTo(segment.x, segment.y);
       ctx.stroke();
 
-      if (idx !== Trail.segments.length - 1) {
+      if (i !== Trail.segments.length - 1) {
         ctx.beginPath();
         ctx.moveTo(segment.x, segment.y);
       }
-    })
-
-    ctx.restore();
+    }
   }
 
   constructor() {

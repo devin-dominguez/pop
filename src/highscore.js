@@ -8,6 +8,7 @@ const HighScore = {
   },
 
   draw(ctx) {
+    ctx.setTransform(1, 0, 0, 1, 0, 0);
     ctx.fillStyle = 'black';
     ctx.fillRect(0, 0, this.app.width, this.app.height);
     let scoreString = Score.score.toString();
@@ -28,12 +29,9 @@ const HighScore = {
     scoreString = 'Score ' + scoreString;
     highScoreString = ' Best ' + highScoreString;
 
-    ctx.save();
     ctx.strokeStyle = 'red';
     drawString(ctx, scoreString, 60, 60, 20);
     drawString(ctx, highScoreString, 60, 120, 20);
-
-    ctx.restore();
   },
 
   onKeyDown(key) {
