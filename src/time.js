@@ -54,7 +54,7 @@ export default class Time {
 
   static draw(ctx) {
     if (!Time.flash) {
-      ctx.strokeStyle = Time.fillColor;
+      ctx.strokeStyle = Time.fillColor.value;
       ctx.strokeRect(
         Time.padding,
         Field.height - Time.padding,
@@ -63,7 +63,7 @@ export default class Time {
       );
     }
 
-    ctx.strokeStyle = Time.containerColor;
+    ctx.strokeStyle = Time.containerColor.value;
 
     ctx.strokeRect(0, 0, Time.containerWidth, Field.height);
 

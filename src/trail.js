@@ -32,13 +32,12 @@ export default class Trail {
   }
 
   static draw(ctx) {
-    ctx.strokeStyle = Trail.color;
     ctx.moveTo(Player.x, Player.y);
     ctx.beginPath();
 
     for (let i = 0, l = Trail.segments.length; i < l; i++) {
       const segment = Trail.segments[i];
-      //ctx.globalAlpha = segment.fade;
+      ctx.strokeStyle = Trail.color.scaled(segment.fade);
       ctx.lineTo(segment.x, segment.y);
       ctx.stroke();
 

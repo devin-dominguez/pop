@@ -75,7 +75,7 @@ const Gameplay = {
   draw(ctx) {
     ctx.setTransform(1, 0, 0, 1, 0, 0);
     //ctx.clearRect(0, 0, this.app.width, this.app.height);
-    ctx.fillStyle = Config.backgroundColor;
+    ctx.fillStyle = Config.backgroundColor.value;
     ctx.fillRect(0, 0, this.app.width, this.app.height);
 
     this.transformToFitCanvas(ctx);

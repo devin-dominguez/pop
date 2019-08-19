@@ -76,8 +76,7 @@ export default class Burst {
     ctx.moveTo(this.x, this.y);
     const size = lerp(this.size, Burst.minSize, Burst.maxSize);
     ctx.lineTo(this.x + this.vX * size, this.y + this.vY * size);
-    //ctx.globalAlpha = this.fade;
-    ctx.strokeStyle = Burst.color;
+    ctx.strokeStyle = Burst.color.scaled(this.fade);
     ctx.stroke();
   }
 }

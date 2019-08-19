@@ -27,7 +27,7 @@ export default class Backdrop {
     const offsetY = Field.height + (sunSize * (1 - rise))
 
     // clip
-    ctx.fillStyle = Backdrop.backgroundColor;
+    ctx.fillStyle = Backdrop.backgroundColor.value;
     ctx.fillRect(0, 0, Field.width, Field.height);
     ctx.save();
     ctx.clip();
@@ -43,20 +43,17 @@ export default class Backdrop {
       ctx.beginPath();
       ctx.moveTo(offsetX, offsetY);
       ctx.lineTo(offsetX + x, offsetY + y);
-      //ctx.globalAlpha = progress ** 6;
-      ctx.strokeStyle = Backdrop.color;
+      ctx.strokeStyle = Backdrop.color.scaled(progress ** 6);
       ctx.stroke();
     }
     // sun
     ctx.beginPath();
     ctx.arc(offsetX, offsetY, sunSize, 0, Math.PI * 2);
 
-    //ctx.globalAlpha = progress;
-    ctx.strokeStyle = Backdrop.color;
+    ctx.strokeStyle = Backdrop.color.scaled(progress);
     ctx.stroke();
 
-    //ctx.globalAlpha = 1;
-    ctx.fillStyle = Backdrop.backgroundColor;
+    ctx.fillStyle = Backdrop.backgroundColor.value;
     ctx.fill();
 
     ctx.restore(); // clip

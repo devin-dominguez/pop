@@ -1,11 +1,9 @@
-//const COLOR_A = 'red';
-//const COLOR_B = 'blue';
-//const COLOR_BG = 'black';
-//const COLOR_FG = 'white';
-const COLOR_A = '#ff7573';
-const COLOR_B = '#73b7ff';
-const COLOR_BG = 'black';
-const COLOR_FG = 'white';
+import Color from './color';
+const COLOR_A = new Color('#ff7573');
+const COLOR_B = new Color('#73b7ff');
+const COLOR_BG = new Color('#000000');
+const COLOR_FG = new Color('#ffffff');
+
 
 export default {
   backgroundColor: COLOR_BG,

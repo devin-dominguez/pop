@@ -117,11 +117,11 @@ export default class Bullet {
     ctx.beginPath();
     ctx.arc(this.x, this.y, size, 0, Math.PI * 2);
 
-    ctx.fillStyle = this.escaped ? Bullet.escapedColor : Bullet.backgroundColor;
+    ctx.fillStyle = this.escaped ? Bullet.escapedColor.value : Bullet.backgroundColor.value;
     ctx.fill();
 
     if (!this.escaped) {
-      ctx.strokeStyle =  Bullet.color;
+      ctx.strokeStyle =  Bullet.color.value;
       ctx.stroke();
     }
   }

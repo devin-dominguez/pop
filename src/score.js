@@ -42,7 +42,7 @@ export default class Score {
   }
 
   static draw(ctx) {
-    ctx.strokeStyle = Score.color;
+    ctx.strokeStyle = Score.color.value;
     drawString(ctx, Score.scoreString, 0, 0, Score.size);
   }
 

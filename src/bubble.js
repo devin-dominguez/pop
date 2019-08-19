@@ -195,12 +195,12 @@ export default class Bubble {
   //}
 
   //drawBodyFill(ctx) {
-    //ctx.fillStyle = Bubble.COLOR_BG;
+    //ctx.fillStyle = Bubble.COLOR_BG.value;
     //ctx.fill();
   //}
 
   //drawBodyStroke(ctx) {
-    //ctx.strokeStyle = Bubble.color;
+    //ctx.strokeStyle = Bubble.color.value;
     //ctx.stroke();
 
   //}
@@ -212,12 +212,12 @@ export default class Bubble {
   //}
 
   //drawLidFill(ctx) {
-    //ctx.fillStyle = Bubble.COLOR_BG;
+    //ctx.fillStyle = Bubble.COLOR_BG.value;
     //ctx.fill();
   //}
 
   //drawLidStroke(ctx) {
-    //ctx.strokeStyle = Bubble.color;
+    //ctx.strokeStyle = Bubble.color.value;
     //ctx.stroke();
   //}
 
@@ -237,9 +237,9 @@ export default class Bubble {
   //}
 
   //drawEyeFill(ctx) {
-    //ctx.fillStyle = Bubble.backgroundColor;
+    //ctx.fillStyle = Bubble.backgroundColor.value;
     //if (this.flash) {
-      //ctx.fillStyle = Bubble.pupilColor;
+      //ctx.fillStyle = Bubble.pupilColor.value;
       //this.flash = false;
     //}
 
@@ -250,7 +250,7 @@ export default class Bubble {
   //}
 
   //drawEyeStroke(ctx) {
-    //ctx.strokeStyle = Bubble.pupilColor;
+    //ctx.strokeStyle = Bubble.pupilColor.value;
     //ctx.stroke();
 
     //ctx.restore();
@@ -258,8 +258,8 @@ export default class Bubble {
   //}
 
   draw(ctx) {
-    ctx.fillStyle = Bubble.backgroundColor;
-    ctx.strokeStyle = Bubble.color;
+    ctx.fillStyle = Bubble.backgroundColor.value;
+    ctx.strokeStyle = Bubble.color.value;
 
     // eye
     ctx.beginPath();
@@ -285,10 +285,10 @@ export default class Bubble {
     ctx.arc(this.x + offsetX, this.y + offsetY, this.size / 2, 0, Math.PI * 2);
 
     if (this.flash) {
-      ctx.fillStyle = Bubble.pupilColor;
+      ctx.fillStyle = Bubble.pupilColor.value;
       this.flash = false;
     }
-    ctx.strokeStyle = Bubble.pupilColor;
+    ctx.strokeStyle = Bubble.pupilColor.value;
 
     ctx.fill();
     ctx.stroke();

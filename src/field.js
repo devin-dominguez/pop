@@ -16,11 +16,11 @@ export default class Field  {
   static draw(ctx) {
     if (Field.flash) {
       Field.flash = false;
-      ctx.fillStyle = Field.flashColor;
+      ctx.fillStyle = Field.flashColor.value;
       ctx.fillRect(0, 0, Field.width, Field.height);
     }
 
-    ctx.strokeStyle = Field.color;
+    ctx.strokeStyle = Field.color.value;
     ctx.strokeRect(0, 0, Field.width, Field.height);
   }
 
