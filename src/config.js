@@ -4,7 +4,6 @@ const COLOR_B = new Color('#73b7ff');
 const COLOR_BG = new Color('#000000');
 const COLOR_FG = new Color('#ffffff');
 
-
 export default {
   backgroundColor: COLOR_BG,
 
@@ -83,6 +82,8 @@ export default {
     fadeTime: 1,
     bubbleMultiplier: 3,
 
+    poolSize: 500,
+
     color: COLOR_FG,
     backgroundColor: COLOR_BG,
     escapedColor: COLOR_A
@@ -103,6 +104,8 @@ export default {
     placementAttempts: 150,
     color: COLOR_B,
     pupilColor: COLOR_A,
-    backgroundColor: COLOR_BG
+    backgroundColor: COLOR_BG,
+
+    poolSize: 500,
   }
 };

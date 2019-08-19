@@ -9,129 +9,156 @@ import {
   WaveClear
 } from './events';
 
-export default class Bullet {
-  static init() {
-    Object.assign(Bullet, Config.bullet);
-    Bullet.reset();
-  }
+const Bullets  = {
+  init() {
+    Object.assign(this, Config.bullet);
+    this.reset();
+  },
 
-  static reset() {
-    Bullet.bullets = [];
-  }
+  reset() {
+    this.bullets = [];
+    this.pool = [];
+    this.freeItems = [];
 
-  static update(dt) {
+    for (let i = 0, l = this.poolSize; i < l; i++) {
+      const bullet = {idx: i, free: false};
+      this.initBullet(bullet);
+      this.pool.push(bullet);
+      this.freeItems.push(i);
+    }
+  },
+
+  initBullet(bullet, x = 0, y = 0, vX = 0, vY = 0) {
+    bullet.x = x;
+    bullet.y = y;
+    bullet.vX = vX * this.speed;
+    bullet.vY = vY * this.speed;
+    bullet.size = this.size;
+    bullet.escaped = false;
+    bullet.dead = false;
+    bullet.fadeTime = this.fadeTime;
+    bullet.waveEscape = false;
+  },
+
+  addBullet(x, y, vX, vY) {
+    const bullet = this.getBulletFromPool();
+    if (!bullet) {
+      return;
+    }
+    this.initBullet(bullet, x, y, vX, vY);
+    bullet.free = false;
+
+    this.bullets.push(bullet);
+  },
+
+  getBulletFromPool() {
+    if (this.freeItems.length === 0) {
+      return;
+    }
+
+    const idx = this.freeItems.pop();
+    return this.pool[idx];
+  },
+
+  update(dt) {
     const aliveBullets = [];
-    for (let i = 0, l = Bullet.bullets.length; i < l; i++) {
-      const bullet = Bullet.bullets[i];
-      bullet.update(dt);
+    for (let i = 0, l = this.bullets.length; i < l; i++) {
+      const bullet = this.bullets[i];
+      this.updateBullet(bullet, dt);
       if (!bullet.dead) {
         aliveBullets.push(bullet);
+      } else {
+        bullet.free = true;
+        this.freeItems.push(bullet.idx);
       }
     }
 
-    Bullet.bullets = aliveBullets;
-  }
+    this.bullets = aliveBullets;
+  },
 
-  static draw(ctx) {
-    for (let i = 0, l = Bullet.bullets.length; i < l; i++) {
-      const bullet = Bullet.bullets[i];
-      bullet.draw(ctx);
+  draw(ctx) {
+    for (let i = 0, l = this.bullets.length; i < l; i++) {
+      //debugger
+      const bullet = this.bullets[i];
+      this.drawBullet(bullet, ctx);
     }
-  }
+  },
 
-  static killAll() {
-    for (let i = 0, l = Bullet.bullets.length; i < l; i++) {
-      const bullet = Bullet.bullets[i];
+  killAll() {
+    for (let i = 0, l = this.bullets.length; i < l; i++) {
+      const bullet = this.bullets[i];
       bullet.dead = true;
     }
-  }
+  },
 
-  static escapeAll() {
-    for (let i = 0, l = Bullet.bullets.length; i < l; i++) {
-      const bullet = Bullet.bullets[i];
+  escapeAll() {
+    for (let i = 0, l = this.bullets.length; i < l; i++) {
+      const bullet = this.bullets[i];
       bullet.escaped = true;
     }
-  }
+  },
 
-  static makeBulletsFromBubble(bubble) {
+  makeBulletsFromBubble(bubble) {
     const { x, y, level, size } = bubble;
-    const bulletCount = level * Bullet.bubbleMultiplier;
+    const bulletCount = level * this.bubbleMultiplier;
 
     for (let i = 0; i < bulletCount; i++) {
       const direction = (i / bulletCount) * Math.PI * 2;
       const vX = Math.cos(direction);
       const vY = Math.sin(direction);
-      Bullet.bullets.push(new Bullet(
-        x + vX * size,
-        y + vY * size,
-        vX,
-        vY
-      ));
+      this.addBullet(x + vX * size, y + vY * size, vX, vY);
     }
-  }
+  },
 
-  constructor(x, y, vX, vY) {
-    this.size = Bullet.size;
-    this.x = x;
-    this.y = y;
-    this.vX = vX * Bullet.speed;
-    this.vY = vY * Bullet.speed;
-    this.escaped = false;
-    this.dead = false;
-    this.fadeTime = Bullet.fadeTime;
-    this.waveEscape = false;
-  }
+  updateBullet(bullet, dt) {
+    bullet.x += bullet.vX * dt;
+    bullet.y += bullet.vY * dt;
 
-  update(dt) {
-    this.x += this.vX * dt;
-    this.y += this.vY * dt;
-
-    if (!this.escaped && this.isOutOfBounds) {
-      this.escaped = true;
+    const isOutOfBounds = (bullet.x > Field.width) ||
+      (bullet.y > Field.height) ||
+      (bullet.x < 0) ||
+      (bullet.y < 0);
+    if (!bullet.escaped && isOutOfBounds) {
+      bullet.escaped = true;
       Score.onBulletEscape();
       Time.onBulletEscape();
     }
 
-    if (this.escaped) {
-      this.fadeTime -= dt;
+    if (bullet.escaped) {
+      bullet.fadeTime -= dt;
     } else {
       const collision = checkCircularCollision(
-        this,
+        bullet,
         Player.hitboxCollisionCircle
       );
       if (collision) {
-        Bullet.killAll();
-        BulletCollision.trigger(this);
+        this.killAll();
+        BulletCollision.trigger(bullet);
       }
     }
 
-    if (this.fadeTime < 0) {
-      this.fadeTime = 0;
-      this.dead = true;
+    if (bullet.fadeTime < 0) {
+      bullet.fadeTime = 0;
+      bullet.dead = true;
     }
-  }
+  },
 
-  draw(ctx) {
-    const size = this.size * (this.fadeTime / Bullet.fadeTime);
+  drawBullet(bullet, ctx) {
+    const size = bullet.size * (bullet.fadeTime / this.fadeTime);
 
     ctx.beginPath();
-    ctx.arc(this.x, this.y, size, 0, Math.PI * 2);
+    ctx.arc(bullet.x, bullet.y, size, 0, Math.PI * 2);
 
-    ctx.fillStyle = this.escaped ? Bullet.escapedColor.value : Bullet.backgroundColor.value;
+    ctx.fillStyle = bullet.escaped ? this.escapedColor.value : this.backgroundColor.value;
     ctx.fill();
 
-    if (!this.escaped) {
-      ctx.strokeStyle =  Bullet.color.value;
+    if (!bullet.escaped) {
+      ctx.strokeStyle =  this.color.value;
       ctx.stroke();
     }
   }
-
-  get isOutOfBounds() {
-    return (this.x > Field.width) ||
-      (this.y > Field.height) ||
-      (this.x < 0) ||
-      (this.y < 0);
-  }
 }
 
-WaveClear.subscribe(Bullet.escapeAll);
+WaveClear.subscribe(Bullets.escapeAll.bind(Bullets));
+
+export default Bullets;
