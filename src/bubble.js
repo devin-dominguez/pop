@@ -182,19 +182,23 @@ const Bubbles  = {
   },
 
   drawBubble(bubble, ctx) {
+    const x = 0 | bubble.x;
+    const y = 0 | bubble.y;
+    const size = 0 | bubble.size;
+
     ctx.fillStyle = this.backgroundColor.value;
     ctx.strokeStyle = this.color.value;
 
     // eye
     ctx.beginPath();
-    ctx.arc(bubble.x, bubble.y, bubble.size, 0, Math.PI * 2);
+    ctx.arc(x, y, size, 0, Math.PI * 2);
     ctx.fill();
     ctx.stroke();
 
     // lid
     ctx.beginPath();
-    ctx.ellipse(bubble.x, bubble.y, bubble.size, bubble.size * bubble.fade, 0, 0, Math.PI);
-    ctx.ellipse(bubble.x, bubble.y, bubble.size, bubble.size * bubble.fade, 0, Math.PI, 0);
+    ctx.ellipse(x, y, size, 0 | (size * bubble.fade), 0, 0, Math.PI);
+    ctx.ellipse(x, y, size, 0 | (size * bubble.fade), 0, Math.PI, 0);
     ctx.fill();
     ctx.stroke();
 
@@ -206,7 +210,7 @@ const Bubbles  = {
     const offsetX = (bubble.size / 6) * Math.cos(angle);
     const offsetY = (bubble.size / 6) * Math.sin(angle);
     ctx.beginPath();
-    ctx.arc(bubble.x + offsetX, bubble.y + offsetY, bubble.size / 2, 0, Math.PI * 2);
+    ctx.arc(Math.round(x + offsetX), Math.round(y + offsetY), size / 2, 0, Math.PI * 2);
 
     if (bubble.flash) {
       ctx.fillStyle = this.pupilColor.value;

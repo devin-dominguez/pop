@@ -74,8 +74,8 @@ export default class Burst {
   draw(ctx) {
     ctx.beginPath();
     ctx.moveTo(this.x, this.y);
-    const size = lerp(this.size, Burst.minSize, Burst.maxSize);
-    ctx.lineTo(this.x + this.vX * size, this.y + this.vY * size);
+    const size = 0 | lerp(this.size, Burst.minSize, Burst.maxSize);
+    ctx.lineTo(0 | (this.x + this.vX * size), 0 | (this.y + this.vY * size));
     ctx.strokeStyle = Burst.color.scaled(this.fade);
     ctx.stroke();
   }

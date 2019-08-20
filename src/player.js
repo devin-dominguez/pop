@@ -56,13 +56,15 @@ export default class Player {
   }
 
   static draw(ctx) {
+    const x = 0 | Player.x;
+    const y = 0 | Player.y;
     ctx.beginPath();
-    ctx.arc(Player.x, Player.y, Player.size, 0, Math.PI * 2);
+    ctx.arc(x, y, Player.size, 0, Math.PI * 2);
     ctx.strokeStyle = Player.triggerColor.value;
     ctx.stroke();
 
     ctx.beginPath();
-    ctx.arc(Player.x, Player.y, Player.hitboxSize, 0, Math.PI * 2);
+    ctx.arc(x, y, Player.hitboxSize, 0, Math.PI * 2);
     ctx.strokeStyle = Player.hitboxColor.value;
     ctx.stroke();
   }

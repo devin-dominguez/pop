@@ -79,8 +79,8 @@ export function drawCharacter(ctx, char, x, y, size, center = true) {
   const offset = center ? 0 : size;
   lineData.forEach(({a, b}) => {
     ctx.beginPath();
-    ctx.moveTo(a.x * size + x + offset, a.y * size + y);
-    ctx.lineTo(b.x * size + x + offset, b.y * size + y);
+    ctx.moveTo(0 | (a.x * size + x + offset), 0 | (a.y * size + y));
+    ctx.lineTo(0 | (b.x * size + x + offset), 0 | (b.y * size + y));
     ctx.stroke();
   })
 }

@@ -32,18 +32,18 @@ export default class Trail {
   }
 
   static draw(ctx) {
-    ctx.moveTo(Player.x, Player.y);
+    ctx.moveTo(0 | Player.x, 0 | Player.y);
     ctx.beginPath();
 
     for (let i = 0, l = Trail.segments.length; i < l; i++) {
       const segment = Trail.segments[i];
       ctx.strokeStyle = Trail.color.scaled(segment.fade);
-      ctx.lineTo(segment.x, segment.y);
+      ctx.lineTo(0 | segment.x, 0 | segment.y);
       ctx.stroke();
 
       if (i !== Trail.segments.length - 1) {
         ctx.beginPath();
-        ctx.moveTo(segment.x, segment.y);
+        ctx.moveTo(0 | segment.x, 0 | segment.y);
       }
     }
   }

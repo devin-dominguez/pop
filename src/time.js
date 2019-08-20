@@ -53,28 +53,26 @@ export default class Time {
   }
 
   static draw(ctx) {
-    if (!Time.flash) {
-      ctx.strokeStyle = Time.fillColor.value;
-      ctx.strokeRect(
-        Time.padding,
-        Field.height - Time.padding,
-        Time.containerWidth - (Time.padding * 2),
-        -Time.normalized * (Field.height - (Time.padding * 2))
-      );
-    }
+    ctx.strokeStyle = Time.fillColor.value;
+    ctx.strokeRect(
+      0 | Time.padding,
+      0 | (Field.height - Time.padding),
+      0 | (Time.containerWidth - (Time.padding * 2)),
+      0 | (-Time.normalized * (Field.height - (Time.padding * 2)))
+    );
 
     ctx.strokeStyle = Time.containerColor.value;
 
-    ctx.strokeRect(0, 0, Time.containerWidth, Field.height);
+    ctx.strokeRect(0, 0, 0 | Time.containerWidth, 0 | Field.height);
 
     ctx.beginPath();
-    ctx.moveTo(0, Time.bonusOffset);
-    ctx.lineTo(Time.containerWidth, Time.bonusOffset);
+    ctx.moveTo(0, 0 | Time.bonusOffset);
+    ctx.lineTo(0 | Time.containerWidth, 0 | Time.bonusOffset);
     ctx.stroke();
 
     ctx.beginPath();
-    ctx.moveTo(0, Time.deathOffset);
-    ctx.lineTo(Time.containerWidth, Time.deathOffset);
+    ctx.moveTo(0, 0 | Time.deathOffset);
+    ctx.lineTo(0 | Time.containerWidth, 0 | Time.deathOffset);
     ctx.stroke();
   }
 

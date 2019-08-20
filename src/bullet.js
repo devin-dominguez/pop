@@ -141,10 +141,12 @@ const Bullets  = {
   },
 
   drawBullet(bullet, ctx) {
-    const size = bullet.size * (bullet.fadeTime / this.fadeTime);
+    const size = Math.round(bullet.size * (bullet.fadeTime / this.fadeTime));
+    const x = 0 | bullet.x;
+    const y = 0 | bullet.y;
 
     ctx.beginPath();
-    ctx.arc(bullet.x, bullet.y, size, 0, Math.PI * 2);
+    ctx.arc(x, y, size, 0, Math.PI * 2);
 
     ctx.fillStyle = bullet.escaped ? this.escapedColor.value : this.backgroundColor.value;
     ctx.fill();
