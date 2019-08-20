@@ -99,11 +99,11 @@ export default {
     sizeMultiplier: 5,
     timeMultiplier: 0.25,
     fadeRate: 1,
-    placementAttempts: 150,
+    placementAttempts: 64,
     color: COLOR_B,
     pupilColor: COLOR_A,
     backgroundColor: COLOR_BG,
 
-    poolSize: 500,
+    poolSize: 250,
   }
 };

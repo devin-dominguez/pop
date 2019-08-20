@@ -46,6 +46,7 @@ export default class Backdrop {
       ctx.strokeStyle = Backdrop.color.scaled(progress ** 6);
       ctx.stroke();
     }
+
     // sun
     ctx.beginPath();
     ctx.arc(offsetX, offsetY, sunSize, 0, Math.PI * 2);
@@ -57,6 +58,5 @@ export default class Backdrop {
     ctx.stroke();
 
     ctx.restore(); // clip
-
   }
 }

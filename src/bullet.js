@@ -21,7 +21,7 @@ const Bullets  = {
     this.freeItems = [];
 
     for (let i = 0, l = this.poolSize; i < l; i++) {
-      const bullet = {idx: i, free: false};
+      const bullet = {idx: i};
       this.initBullet(bullet);
       this.pool.push(bullet);
       this.freeItems.push(i);
@@ -76,7 +76,6 @@ const Bullets  = {
 
   draw(ctx) {
     for (let i = 0, l = this.bullets.length; i < l; i++) {
-      //debugger
       const bullet = this.bullets[i];
       this.drawBullet(bullet, ctx);
     }

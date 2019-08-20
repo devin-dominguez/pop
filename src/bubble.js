@@ -16,9 +16,50 @@ const Bubbles  = {
     this.reset();
   },
 
-   reset() {
-    this.bubbles = [];
+  reset() {
     this.currentWave = 0;
+
+    this.bubbles = [];
+    this.pool = [];
+    this.freeItems = [];
+
+    for (let i = 0, l = this.poolSize; i < l; i++) {
+      const bubble = {idx: i};
+      this.initBubble(bubble);
+      this.pool.push(bubble);
+      this.freeItems.push(i);
+    }
+  },
+
+  initBubble(bubble, level = 0) {
+    bubble.x = 0;
+    bubble.y = 0;
+    bubble.level = level;
+    bubble.size = (level + 1) * this.sizeMultiplier;
+    bubble.dead = false;
+    bubble.active = false;
+    bubble.fadeRate = level * this.timeMultiplier * this.fadeRate;
+    bubble.fade = 1;
+    bubble.flash = false;
+  },
+
+  addBubble(level) {
+    const bubble = this.getBubbleFromPool();
+    if (!bubble) {
+      return;
+    }
+    this.initBubble(bubble, level);
+
+    this.bubbles.push(bubble);
+  },
+
+  getBubbleFromPool() {
+    if (this.freeItems.length ===0) {
+      return;
+    }
+
+    const idx = this.freeItems.pop();
+    return this.pool[idx];
   },
 
   update(dt) {
@@ -34,6 +75,8 @@ const Bubbles  = {
       this.updateBubble(bubble, dt);
       if (!bubble.dead) {
         aliveBubbles.push(bubble);
+      } else {
+        this.freeItems.push(bubble.idx);
       }
     }
 
@@ -47,13 +90,13 @@ const Bubbles  = {
     }
   },
 
-   makeWave() {
+  makeWave() {
     const { currentWave } = this;
     for (let i = 0; i < currentWave; i++) {
       const bubbleCountForThisLevel = currentWave - i + 2;
       for (let j = 0; j < bubbleCountForThisLevel; j++) {
         const level = Math.min(16, j + 1);
-        this.bubbles.push(this.createBubble(level));
+        this.addBubble(level);
       }
     }
 
@@ -70,8 +113,8 @@ const Bubbles  = {
       let attemptsRemaining = this.placementAttempts;
 
       while (!placed && attemptsRemaining) {
-          bubble.x = Math.random() * (maxX - minX) + minX;
-          bubble.y = Math.random() * (maxY - minY) + minY;
+        bubble.x = Math.random() * (maxX - minX) + minX;
+        bubble.y = Math.random() * (maxY - minY) + minY;
 
         const noFit = placedBubbles.some(placedBubble => {
           return checkCircularCollision(
@@ -96,7 +139,7 @@ const Bubbles  = {
     Time.setRateFromWave(currentWave);
   },
 
-   killAllActiveBubbles() {
+  killAllActiveBubbles() {
     this.bubbles.forEach(bubble => {
       if (bubble.active) {
         bubble.dead = true;
